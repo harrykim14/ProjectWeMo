@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  SQL 맵퍼 파일은 xml이기 때문에 제일 먼저 xml 선언이 옵니다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="Memoes">
+
+	<resultMap id = "SectionCountMap" type = "java.util.Map">
+		<result column = "STUDY" property = "STUDY"/>
+		<result column = "HEALTH" property = "HEALTH"/>
+		<result column = "MONEY" property = "MONEY"/>
+	</resultMap>
+	
+	<select id = "getMemoList" parameterType = "memo" resultType = "memo">
+		SELECT * FROM MEMO 
+		WHERE USER_EMAIL = #{USER_EMAIL} 
+		  AND MEMO_SUB = #{MEMO_SUB}
+		  AND MEMO_TRA = 'N' 
+		ORDER BY MEMO_ZID DESC
+	</select>
+	<select id = "getFavMemoList" parameterType = "memo" resultType = "memo">
+		SELECT * FROM MEMO
+		WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_FAV = 'Y' AND MEMO_TRA = 'N'
+	</select>
+	<select id = "getTraMemoList" parameterType = "memo" resultType = "memo">
+		SELECT * FROM MEMO
+		WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_TRA = 'Y'
+	</select>
+	<select id = "searchMemoList" parameterType = "memo" resultType = "memo">
+		SELECT * FROM MEMO
+		WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_TEX LIKE #{MEMO_TEX}
+	</select>
+	<select id = "getCountMemolist" parameterType = "memo" resultType = "int">
+		SELECT COUNT(*) FROM MEMO
+		WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_SUB = #{MEMO_SUB} AND MEMO_TRA = 'N'
+	</select>
+	<select id = "getCountSectionlist" parameterType = "String" resultMap = "SectionCountMap">
+		 SELECT (SELECT COUNT(MEMO_SUB) FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_SUB = 'STUDY' AND MEMO_TRA = 'N') STUDY,
+	   			(SELECT COUNT(MEMO_SUB) FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_SUB = 'HEALTH' AND MEMO_TRA = 'N') HEALTH,
+	   			(SELECT COUNT(MEMO_SUB) FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_SUB = 'MONEY' AND MEMO_TRA = 'N') MONEY
+		 FROM DUAL	 
+	</select>
+	
+	<select id = "getLatestMemoInfo" parameterType = "memo" resultType = "memo">
+		SELECT * FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_SUB = #{MEMO_SUB} AND MEMO_NUM = (SELECT MAX(MEMO_NUM) FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL})
+	</select>
+
+	<insert id="memoForNewAccount" parameterType="String">
+	INSERT INTO MEMO VALUES(#{USER_EMAIL}, 1, 'STUDY', 'ABSOLUTE', '100px', '100px', 'khaki', '350px', '200px', 999, 'WeMo에 오신것을 환영합니다', TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'WeMo에 오신것을 환영합니다', TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'N', 'N', 'N', '잠금 키워드')
+					<!-- USER_EMAIL, MEMO_NUM, MEMO_SUB, MEMO_POSITION, MEMO_TOP, MEMO_LEFT, MEMO_COLOR, MEMO_WIDTH, MEMO_HEIGHT, MEMO_ZID, MEMO_TEX, MEMO_DATE, MEMO_PRE, PREV_TEX, MEMO_FAV, MEMO_LOC, MEMO_TRA, MEMO_KEYW -->
+	</insert>
+	
+	<insert id="newMemo" parameterType="memo">
+		<selectKey resultType = "int" order = "BEFORE" keyProperty = "MEMO_NUM">
+			SELECT NVL(MAX(MEMO_NUM), 0)+1 FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL}
+		</selectKey>
+	INSERT INTO MEMO VALUES(#{USER_EMAIL}, #{MEMO_NUM} , #{MEMO_SUB}, 'ABSOLUTE', '100px', '100px', 'khaki', '350px', '200px', 999, '새 메모', TO_CHAR(SYSDATE, 'YYYY-MM-DD'), '새 메모', TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'N', 'N', 'N', '잠금 키워드')
+					<!-- USER_EMAIL, MEMO_NUM, MEMO_SUB, MEMO_POSITION, MEMO_TOP, MEMO_LEFT, MEMO_COLOR, MEMO_WIDTH, MEMO_HEIGHT, MEMO_ZID, MEMO_TEX, MEMO_DATE, MEMO_PRE, PREV_TEX, MEMO_FAV, MEMO_LOC, MEMO_TRA, MEMO_KEYW -->
+	</insert>
+	
+	<update id = "adjustMemoboxzindex" parameterType = "memo">
+		UPDATE MEMO SET MEMO_ZID = MEMO_ZID-1 
+		WHERE USER_EMAIL = #{USER_EMAIL} 
+		  AND MEMO_SUB = #{MEMO_SUB} 
+		  AND MEMO_NUM != #{MEMO_NUM}
+	</update>
+	
+	<update id ="moveToTrashBackAndForth" parameterType = "memo">
+		UPDATE MEMO 
+		SET MEMO_TRA = #{MEMO_TRA} 
+		WHERE USER_EMAIL = #{USER_EMAIL} 
+		  AND MEMO_NUM = #{MEMO_NUM}
+	</update>
+	
+	<update id = "updateMemoFavorite" parameterType = "memo">
+		UPDATE MEMO 
+		SET MEMO_FAV = #{MEMO_FAV} 
+		WHERE USER_EMAIL = #{USER_EMAIL} 
+		  AND MEMO_NUM = #{MEMO_NUM}	
+	</update>
+	
+	<update id = "saveMemoProperties" parameterType = "memo">
+		UPDATE MEMO 
+		SET MEMO_POSITION = #{MEMO_POSITION},
+			MEMO_TOP = #{MEMO_TOP},
+			MEMO_LEFT = #{MEMO_LEFT},
+			MEMO_COLOR = #{MEMO_COLOR},
+			MEMO_WIDTH = #{MEMO_WIDTH},
+			MEMO_HEIGHT = #{MEMO_HEIGHT},
+			MEMO_ZID = #{MEMO_ZID},
+			MEMO_TEX = #{MEMO_TEX},
+			MEMO_FAV = #{MEMO_FAV},
+			MEMO_LOC = #{MEMO_LOC}
+		WHERE MEMO_NUM = #{MEMO_NUM} 
+		AND MEMO_SUB = #{MEMO_SUB} 
+		AND USER_EMAIL = #{USER_EMAIL}
+	</update>
+	
+	<delete id = "deleteMemo" parameterType = "memo">
+		DELETE FROM MEMO
+		WHERE USER_EMAIL = #{USER_EMAIL}
+		AND MEMO_NUM = #{MEMO_NUM}
+		AND MEMO_TRA = 'Y'
+	</delete>
+	
+</mapper>

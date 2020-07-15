@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  SQL 맵퍼 파일은 xml이기 때문에 제일 먼저 xml 선언이 옵니다. -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="Members">
+
+	<insert id = "insert" parameterType = "member">
+		INSERT INTO MEMBER VALUES(#{USER_EMAIL}, #{USER_PASS}, 'WEMO', #{USER_EMAIL}, 'No Form Now', 'STUDY')
+	</insert>
+						     	 <!-- USER_EMAIL, USER_PASS, USER_SUB, AUTH_TYPE, USER_NICK, USER_FORM -->
+	
+	<select id = "getMemberDetail" parameterType = "String" resultType = "member">
+		SELECT * FROM MEMBER WHERE USER_EMAIL = #{USER_EMAIL}
+	</select>
+	
+	<select id = "isId" parameterType="String" resultType="String">
+		select USER_PASS from member where USER_EMAIL= #{USER_EMAIL}
+	</select>
+	
+	<select id = "idcheck" parameterType = "String" resultType = "String">
+		select USER_EMAIL from member where USER_EMAIL = #{USER_EMAIL}
+	</select>
+	
+	<update id = "updateLastSection" parameterType = "member">
+		UPDATE MEMBER SET USER_SUB = #{USER_SUB} WHERE USER_EMAIL = #{USER_EMAIL}
+	</update>
+</mapper>

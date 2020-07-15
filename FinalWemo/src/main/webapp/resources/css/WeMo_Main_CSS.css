@@ -1,0 +1,109 @@
+\.navTable {
+	border-collapse: collapse;
+}
+
+td {
+	border-radius: 5% 5% 0% 0%;
+	width: 8%;
+	line-height: 40px;
+	height: 40px;
+	font-weight: 700;
+	font-size: 14pt;
+	text-align: center;
+}
+
+td:last-child {
+	border-radius: 0% 0%;
+	width: 600px;
+}
+
+.trash {
+	color: white;
+}
+
+.bg-search {
+	background-color: #CCC;
+}
+
+.search_input {
+	font-size: 20pt;
+	line-height: 20px;
+	width: 200px;
+	border: 1px solid gray;
+	box-shadow: 1px 1px gray;
+	border-radius: 5px;
+}
+
+.mobile-row td {
+	width: 33%;
+	height: 20px;
+	font-weight: 700;
+	text-align: center;
+}
+
+#mobile-tbody {
+	display: none;
+}
+
+* {
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+.memobox {
+	margin-top: 20px;
+	border: 1px solid #CCC;
+	border-radius: 5px;
+	box-shadow: 5px gray;
+	background-color : khaki;
+}
+
+.recommend {
+	margin-top: 10px;
+	padding: 10px;
+	box-sizing: border-box;
+	border: 1px solid orange;
+	border-radius: 5px;
+	width: 80%;
+}
+
+.btn {
+	font-weight: 700;
+}
+
+.close {
+	cursor: pointer;
+}
+
+.memoContent {
+	margin: 10px;
+}
+
+.recomList {
+	margin-top: 10px;
+}
+
+.newMemo {
+	cursor: pointer;
+}
+
+.material-icons {
+	cursor: pointer;
+}
+
+.onFavo {
+	color: salmon;
+}
+
+.memo-top {
+	margin: 5px;
+}
+
+.result-word {
+	display:block; 
+	background-color:white
+}
+
+.modal-body tr:hover {
+	background-color:gray;
+	cursor:pointer
+}

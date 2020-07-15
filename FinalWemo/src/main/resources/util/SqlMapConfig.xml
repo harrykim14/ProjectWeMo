@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<typeAlias alias="member"	type="com.naver.wemo.domain.Member"/>
+		<typeAlias alias="memo"	 	type="com.naver.wemo.domain.Memo"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="sql/Member.xml"/>
+		<mapper resource="sql/Memo.xml"/>
+	</mappers>
+</configuration>
