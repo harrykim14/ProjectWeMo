@@ -91,13 +91,13 @@ function navbarResizingEvent(){
         
         } else {
         	
-            var mobileNav = '<table class="table navTable"><thead>'
+            var mobileNav = '<table class="table table-borderless navTable"><thead>'
                           + '<tr class="mobile-row">'
                           + '<td style ="width:15%"><img src = "resources/image/Wemo.png" width = "100px"></td>'
                           + '<td><span class="material-icons float-right search-icon" style = "line-height:24pt;">search<span>&nbsp;'
                           + '<input type = "text" class = "search_input float-right"></td>'
                           + '<td style="width:5%"><span class="togglebtn material-icons float-right">list</span></td></tr></thead>'
-                          + '<tbody id ="mobile-tbody">'
+                          + '<tbody id ="mobile-tbody" class = "dropleft dropdown-menu">'
                           + '<tr class="mobile-row">'
                           + '<td colspan = "2"></td><td class="bg-primary" style="width:5%">공부</td></tr>'
                           + '<tr class="mobile-row">'
@@ -112,6 +112,8 @@ function navbarResizingEvent(){
                           + '<td colspan = "2"></td><td class="bg-dark trash" style="width:5%">휴지통</td></tr>'
                           + '<tr class="mobile-row">'
                           + '<td colspan = "2"></td><td class="bg-info" style="width:5%">통계</td></tr></tbody></table>';
+            
+            console.log(mobileNav);
                        
             $('nav').html(mobileNav);
             $('.search-icon').on('click', addSearchMemoEvent);
