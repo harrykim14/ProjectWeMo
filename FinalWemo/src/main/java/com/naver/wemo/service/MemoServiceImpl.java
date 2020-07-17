@@ -56,14 +56,24 @@ public class MemoServiceImpl implements MemoService {
 	}
 
 	@Override
-	public boolean setMemoLock(Memo memo) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateMemoLockAndUnlock(Memo memo) {
+		if(memodao.updateMemoLockAndUnlock(memo) > 0)
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public boolean updateMemoFavorite(Memo memo) {
 		if(memodao.updateMemoFavorite(memo) > 0)
+			return true;
+		else
+			return false;
+	}
+	
+	@Override
+	public boolean updateMemoColor(Memo memo) {
+		if(memodao.updateMemoColor(memo) > 0)
 			return true;
 		else
 			return false;
@@ -114,6 +124,13 @@ public class MemoServiceImpl implements MemoService {
 		System.out.println("MemoServiceImpl에서 getCountSectionlist()실행");
 		return memodao.getCountSectionlist(USER_EMAIL);
 	}
+
+	@Override
+	public Memo getMemoContent(Memo memo) {
+		return memodao.getMemoContent(memo);
+	}
+
+	
 
 	
 

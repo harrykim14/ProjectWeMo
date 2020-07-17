@@ -53,9 +53,17 @@ public class MemoDAO {
 	public List<Memo> getTraMemoList(Memo memo) {
 		return sqlSession.selectList("Memoes.getTraMemoList", memo);
 	}
+	
+	public int updateMemoLockAndUnlock(Memo memo) {
+		return sqlSession.update("Memoes.updateMemoLockAndUnlock", memo);
+	}
 
 	public int updateMemoFavorite(Memo memo) {
 		return sqlSession.update("Memoes.updateMemoFavorite",memo);
+	}
+	
+	public int updateMemoColor(Memo memo) {
+		return sqlSession.update("Memoes.updateMemoColor", memo);
 	}
 
 	public List<Memo> searchMemoList(Memo memo) {
@@ -69,5 +77,13 @@ public class MemoDAO {
 	public Map<String, Object> getCountSectionlist(String USER_EMAIL) {
 		return sqlSession.selectOne("Memoes.getCountSectionlist", USER_EMAIL);
 	}
+
+	public Memo getMemoContent(Memo memo) {
+		return sqlSession.selectOne("Memoes.getMemoContent", memo);
+	}
+
+	
+
+	
 	
 }

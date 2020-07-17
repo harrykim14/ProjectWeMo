@@ -1,8 +1,12 @@
-\.navTable {
+* {
+	font-family: 'Noto Sans KR', sans-serif;
+}
+
+.navTable {
 	border-collapse: collapse;
 }
 
-td {
+.normal-menu {
 	border-radius: 5% 5% 0% 0%;
 	width: 8%;
 	line-height: 40px;
@@ -12,40 +16,75 @@ td {
 	text-align: center;
 }
 
-td:last-child {
+.normal-menu:last-child {
 	border-radius: 0% 0%;
 	width: 600px;
 }
 
-.trash {
-	color: white;
+.mobile-nav {
+	width : 10%;
+    position : fixed;
+    left : 90%;
+ }
+ 
+.mobile-row{
+	height : 60px;
+}
+.mobile-menu {
+	cursor : pointer;
+ 	border-radius: 5% 0% 0% 5%;
+ 	font-size: 14pt;
+ 	font-weight : 700;
+ 	text-align : center;
+ }
+
+.menu-study {
+	background-color : #68CD2F;	
 }
 
-.bg-search {
-	background-color: #CCC;
+.menu-health {
+	background-color : #FFDBA7;
+}
+
+.menu-money {
+	background-color : #FEC834;
+}
+
+.menu-calendar {
+	background-color : #FF7930;
+}
+
+.menu-important {
+	background-color : #D00002;
+}
+
+.menu-trash {
+	background-color : #D19D52;
+}
+
+.menu-analysis {
+	background-color : #682F02;
+}
+
+.menu-search {
+	background-color : #f8f9fa;
+}
+
+.menu-setting {
+	background-color : #018136;
+}
+
+.material-icons {
+	cursor : pointer;
 }
 
 .search_input {
 	font-size: 20pt;
 	line-height: 20px;
-	width: 200px;
+	width: 150px;
 	border: 1px solid gray;
 	box-shadow: 1px 1px gray;
 	border-radius: 5px;
-}
-
-.mobile-row td {
-	height: 20px;
-	font-weight: 700;
-	text-align: center;
-}
-
-#mobile-tbody {
-	display: none;
-}
-
-* {
-	font-family: 'Noto Sans KR', sans-serif;
 }
 
 .memobox {
@@ -56,38 +95,14 @@ td:last-child {
 	background-color : khaki;
 }
 
-.recommend {
-	margin-top: 10px;
-	padding: 10px;
-	box-sizing: border-box;
-	border: 1px solid orange;
-	border-radius: 5px;
-	width: 80%;
-}
-
-.btn {
-	font-weight: 700;
-}
-
-.close {
-	cursor: pointer;
-}
-
 .memoContent {
 	margin: 10px;
 }
 
-.recomList {
-	margin-top: 10px;
-}
-
-.newMemo {
-	cursor: pointer;
-}
-
-.material-icons {
-	cursor: pointer;
-}
+.colorpad:hover{
+            margin : 1px;
+            border : 1px solid black;
+        }
 
 .onFavo {
 	color: salmon;
@@ -102,7 +117,7 @@ td:last-child {
 	background-color:white
 }
 
-.modal-body tr:hover {
+.search-modal-body tr:hover {
 	background-color:gray;
 	cursor:pointer
 }

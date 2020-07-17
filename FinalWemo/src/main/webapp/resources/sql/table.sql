@@ -10,7 +10,8 @@ CREATE TABLE MEMBER(
 	USER_FORM3 CLOB DEFAULT('설정된 자동완성 폼이 없습니다'),
 	USER_SUB VARCHAR2(30) DEFAULT('STUDY')
 	)	
-	
+	SELECT COALESCE(TO_CHAR(MEMO_TEX), '빈 메모') MEMO_TEX FROM MEMO WHERE USER_EMAIL = 'g@gmail.com' AND MEMO_NUM = 11
+ALTER TABLE MEMO MODIFY(MEMO_KEYW VARCHAR2(100))
 DROP TABLE MEMBER CASCADE Constraints;
 INSERT INTO MEMBER VALUES('g@gmail.com', '1234', 'WEMO', 'g@gmail.com', '설정된 자동완성 폼이 없습니다', '설정된 자동완성 폼이 없습니다', '설정된 자동완성 폼이 없습니다', 'STUDY');
 INSERT INTO MEMBER VALUES('h@gmail.com', '1234', 'WEMO', 'h@gmail.com', 'No Form Now', 'STUDY');

@@ -45,6 +45,9 @@
 	<select id = "getLatestMemoInfo" parameterType = "memo" resultType = "memo">
 		SELECT * FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_SUB = #{MEMO_SUB} AND MEMO_NUM = (SELECT MAX(MEMO_NUM) FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL})
 	</select>
+	<select id = "getMemoContent" parameterType = "memo" resultType = "memo">
+		SELECT COALESCE(TO_CHAR(MEMO_TEX), '빈 메모') MEMO_TEX FROM MEMO WHERE USER_EMAIL = #{USER_EMAIL} AND MEMO_NUM = #{MEMO_NUM}
+	</select>
 
 	<insert id="memoForNewAccount" parameterType="String">
 	INSERT INTO MEMO VALUES(#{USER_EMAIL}, 1, 'STUDY', 'ABSOLUTE', '100px', '100px', 'khaki', '350px', '200px', 999, 'WeMo에 오신것을 환영합니다', TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'WeMo에 오신것을 환영합니다', TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'N', 'N', 'N', '잠금 키워드')
@@ -80,6 +83,19 @@
 		  AND MEMO_NUM = #{MEMO_NUM}	
 	</update>
 	
+	<update id = "updateMemoLockAndUnlock" parameterType = "memo">
+		UPDATE MEMO
+		SET MEMO_LOC = #{MEMO_LOC},
+			MEMO_KEYW = #{MEMO_KEYW}
+		WHERE USER_EMAIL = #{USER_EMAIL}
+		  AND MEMO_NUM = #{MEMO_NUM}
+	</update>
+	<update id = "updateMemoColor" parameterType = "memo">
+		UPDATE MEMO
+		SET MEMO_COLOR = #{MEMO_COLOR}
+		WHERE USER_EMAIL = #{USER_EMAIL}
+		  AND MEMO_NUM = #{MEMO_NUM}
+	</update>
 	<update id = "saveMemoProperties" parameterType = "memo">
 		UPDATE MEMO 
 		SET MEMO_POSITION = #{MEMO_POSITION},

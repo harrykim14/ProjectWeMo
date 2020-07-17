@@ -20,6 +20,10 @@
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
+<!-- Bootstrap Switch Button -->
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
 <!-- jquery-ui (util for drag/snap) -->
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet"
@@ -41,17 +45,19 @@
 		<table class="table navTable">
 			<tbody>
 				<tr class="first-row">
-					<td><img src="resources/image/Wemo.png" width="100px"></td>
-					<td class="bg-primary">공부</td>
-					<td class="bg-warning">운동</td>
-					<td class="bg-success">가계부</td>
-					<td class="bg-danger">캘린더</td>
-					<td class="bg-secondary">보관함</td>
-					<td class="bg-dark trash">휴지통</td>
-					<td class="bg-info">통계</td>
-					<td class="bg-search"> 
-							<span class="material-icons float-right search-icon" style='line-height:"24pt";'>search</span>
+					<td class="menu-search normal-menu"><img src="resources/image/WemoLogo.png" width="100px"></td>
+					<td class="menu-study normal-menu">공부</td>
+					<td class="menu-health normal-menu">운동</td>
+					<td class="menu-money normal-menu">가계부</td>
+					<td class="menu-calendar normal-menu">캘린더</td>
+					<td class="menu-important normal-menu">보관함</td>
+					<td class="menu-trash normal-menu">휴지통</td>
+					<td class="menu-analysis normal-menu">통계</td>
+					<td class="menu-setting normal-menu">설정</td>
+					<td class="menu-search normal-menu"> 
+							<input type="checkbox" class="memoAlineBtn" style = "width:120px;"data-toggle="toggle" data-on="정리 끄기" data-off="메모 정리" data-onstyle="dark" data-offstyle="success">
 							<span><input type="text" name="SearchMemo" class="search_input float-right">&nbsp;&nbsp;</span>
+							<span class="material-icons float-right search-icon" style='line-height:"30pt";'>search</span>
 					</td>
 				</tr>
 			</tbody>
@@ -103,21 +109,27 @@
 						<c:if test="${Memolist.MEMO_LOC eq 'N' }">
 							<span class="material-icons float-right lock" data-toggle = "tooltip" title = "메모 잠금">lock_open</span>
 						</c:if>
+							<span class="material-icons float-right color" data-toggle = "tooltip" title = "메모 색 변경">color_lens</span>
 					</div>
 					<!-- 메모박스 내 메모 컨텐츠 -->
 					<div class='container memoContent'>
+						<c:if test="${Memolist.MEMO_LOC eq 'Y' }">
+						${Memolist.MEMO_KEYW }
+						</c:if> 
+						<c:if test="${Memolist.MEMO_LOC eq 'N' }">
 						<textarea class='memotext form-control'
 							style="overflow-y:hidden; 
                 		  		   resize:none; 
                 		  		   background-color: ${Memolist.MEMO_COLOR }; 
                 		  		   border: none">${Memolist.MEMO_TEX }</textarea>
+                		 </c:if>
 					</div>
 				</form>
 			</div>
 		</c:forEach>
 	</div>
-	<!-- Modal -->
-	<div id="Modal" class="modal fade" role="dialog">
+	<!-- Search Modal -->
+	<div id="ModalForSearch" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<!-- Modal content-->
 			<div class="modal-content">
@@ -125,12 +137,44 @@
 					<h4 class="modal-title float-left">메모 검색 결과</h4>
 					<h5>누르면 해당 메모로 이동</h5>
 				</div>
-				<table class="modal-body">
+				<table class="modal-body search-modal-body">
 
 				</table>
 			</div>
 		</div>
 	</div>
+	<!-- Lock/Unlock Modal -->
+	<div id="ModalForLock" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header lock-modal-header">
+					
+				</div>
+				<div class="modal-body lock-modal-body">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="colorpad-menu dropdown-menu" style = "display: none">
+        <table class = "table table-borderless" style = "width:250px; ">
+            <tbody>
+                <tr>
+                    <td colspan = "7" style ="text-align: center; font-weight : 700;">메모 색상을 선택</td>
+                </tr>
+                <tr>
+                    <td style = "width:5px"><span class = "COLOR_MEMO_NUM" style = "display : none;"></span></td>
+                    <td class = "colorpad" style = "background-color:#B6F2CB; height:40px;"></td>
+                    <td class = "colorpad" style = "background-color:#C3F2B6; height:40px;"></td>
+                    <td class = "colorpad" style = "background-color:#EBF2B6; height:40px;"></td>
+                    <td class = "colorpad" style = "background-color:#F2D7B6; height:40px;"></td>
+                    <td class = "colorpad" style = "background-color:#F2B6B6; height:40px;"></td>
+                    <td style = "width:5px"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

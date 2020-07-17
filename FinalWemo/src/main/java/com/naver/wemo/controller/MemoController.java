@@ -36,7 +36,8 @@ public class MemoController {
 	public ModelAndView getWeMoList(@RequestParam(value = "MEMO_SUB", defaultValue = "STUDY", required = false) String MEMO_SUB, 
 									ModelAndView mv, Memo memo, HttpSession session, HttpServletResponse resp) throws IOException{
 		String id = (String) session.getAttribute("USER_EMAIL");
-		memo = settingValues(id, MEMO_SUB);
+		memo.setUSER_EMAIL(id);
+		memo.setMEMO_SUB(MEMO_SUB);
 		List<Memo> mList = null;
 		if(MEMO_SUB.equals("IMPORTANT"))
 			mList = mService.getFavMemoList(memo);
@@ -253,6 +254,60 @@ public class MemoController {
 	}	
 	
 	@ResponseBody
+	@RequestMapping(value = "/setMemoColor", method = RequestMethod.POST)
+	public void setMemoColor(Memo memoObj, HttpServletResponse resp) {
+		PrintWriter out = null;
+		System.out.println("USER_EMAIL:"+memoObj.getUSER_EMAIL()+" MEMO_NUM:"+memoObj.getMEMO_NUM()+" MEMO_COLOR:"+memoObj.getMEMO_COLOR());
+		try {
+			resp.setCharacterEncoding("UTF-8");
+			out = resp.getWriter();
+			if(mService.updateMemoColor(memoObj))
+				out.print("true");
+			else 
+				out.println("false");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/setMemoLockAndUnlock", method = RequestMethod.POST)
+	public void setMemoLockAndUnlock(Memo memoObj, HttpServletResponse resp) {
+		PrintWriter out = null;
+		try {
+			resp.setCharacterEncoding("UTF-8");
+			out = resp.getWriter();			
+			if(memoObj.getMEMO_LOC().equals("Y")) {
+				if (mService.updateMemoLockAndUnlock(memoObj))
+					out.print("true");
+			} else {
+				String id = memoObj.getUSER_EMAIL();
+				String pass = memoObj.getMEMO_KEYW();
+				if(memberService.isId(id, pass)) {
+					memoObj.setMEMO_KEYW("잠금 키워드 초기화");
+					if(mService.updateMemoLockAndUnlock(memoObj)) {
+						String memoContent = mService.getMemoContent(memoObj).getMEMO_TEX();
+						String jsonContent = new Gson().toJson(memoContent);
+						System.out.println(jsonContent.length());
+						out.write(jsonContent);
+					} else
+						out.print("일시적인 오류로 메모 내용을 불러오지 못했습니다");
+				} else {
+					out.print("비밀번호가 틀립니다");
+				}
+			}
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if(out != null)
+			   out.close();
+		}
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/setMemoFavorite", method = RequestMethod.POST)
 	public void setMemoFavorite(Memo memoObj, HttpServletResponse resp) {
 		PrintWriter out = null;
@@ -295,10 +350,4 @@ public class MemoController {
 	}
 	
 	
-	public static Memo settingValues(String USER_EMAIL, String MEMO_SUB) {
-		Memo memo = new Memo();
-		memo.setUSER_EMAIL(USER_EMAIL);
-		memo.setMEMO_SUB(MEMO_SUB);
-		return memo;
-	}
 }
