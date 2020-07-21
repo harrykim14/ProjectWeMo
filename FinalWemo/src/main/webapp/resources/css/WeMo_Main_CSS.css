@@ -87,16 +87,16 @@
 	border-radius: 5px;
 }
 
-.memobox {
+.memobox-list, .memoContent-list {
+	width : 90%;
+}
+
+.memobox-normal {
 	margin-top: 20px;
 	border: 1px solid #CCC;
 	border-radius: 5px;
 	box-shadow: 5px gray;
 	background-color : khaki;
-}
-
-.memoContent {
-	margin: 10px;
 }
 
 .colorpad:hover{

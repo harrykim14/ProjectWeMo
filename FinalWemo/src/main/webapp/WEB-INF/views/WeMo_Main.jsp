@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%><!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <html lang="ko">
 <head>
 <title>WeMo -우리들의 메모-</title>
@@ -36,6 +37,13 @@
 
 <link href="resources/css/WeMo_Main_CSS.css" rel="stylesheet">
 <script src="resources/js/WeMo_Main_Functions.js"></script>
+<script>
+$(function(){
+	var triggerPageView = ".menu-" + $('#MEMO_SUB').text().toLowerCase();
+	console.log(triggerPageView);
+	$(triggerPageView).trigger('click');
+})
+</script>
 </head>
 
 <body>
@@ -65,68 +73,7 @@
 	</nav>
 	<!-- 메모장 컨테이너 시작 -->
 	<div class="memoContainer">
-		<c:set var="Memolist" value="${Memolist }" />
-
-
-		<!-- 컨테이너 내 첫번째 메모박스 -->
-		<!-- 메모박스의 위치 지정은 여기서 style로 주면 위치가 지정됨 예시 ↓ -->
-		<c:forEach var="Memolist" items="${Memolist }">
-			<div class='container memobox shadow-sm'
-				style="position: ${Memolist.MEMO_POSITION };
-        	 		  top: ${Memolist.MEMO_TOP };  
-        	 		  left: ${Memolist.MEMO_LEFT };
-        	 		  width : ${Memolist.MEMO_WIDTH };
-        	 		  height : ${Memolist.MEMO_HEIGHT }; 
-        	 		  background-color: ${Memolist.MEMO_COLOR };
-        	 		  z-index: ${Memolist.MEMO_ZID };">
-				<form>
-					<!-- 메모박스 상단 메뉴(날짜, 카테고리, 아이콘들) -->
-					<div class='container memo-top'>
-						<input type="hidden" class="MEMO_NUM" name="MEMO_NUM"
-							value="${Memolist.MEMO_NUM }"> <span class="MEMO_DATE">${Memolist.MEMO_DATE }</span>
-						<c:choose>
-							<c:when test="${Memolist.MEMO_SUB eq 'STUDY'}">
-								<span class="section-name">공부</span>
-							</c:when>
-							<c:when test="${Memolist.MEMO_SUB eq 'HEALTH'}">
-								<span class="section-name">운동</span>
-							</c:when>
-							<c:when test="${Memolist.MEMO_SUB eq 'MONEY'}">
-								<span class="section-name">가계부</span>
-							</c:when>
-						</c:choose>
-						<span class="material-icons delete float-right" data-toggle = "tooltip" title = "휴지통으로">delete</span>
-						<c:if test="${Memolist.MEMO_FAV eq 'Y' }">
-							<span class='material-icons float-right favorites'
-								style='color: salmon' data-toggle = "tooltip" title = "보관 해제">stars</span>
-						</c:if>
-						<c:if test="${Memolist.MEMO_FAV eq 'N' }">
-							<span class='material-icons float-right favorites' data-toggle = "tooltip" title = "메모 보관">stars</span>
-						</c:if>
-						<c:if test="${Memolist.MEMO_LOC eq 'Y' }">
-							<span class="material-icons float-right lock" data-toggle = "tooltip" title = "잠금 해제">lock</span>
-						</c:if>
-						<c:if test="${Memolist.MEMO_LOC eq 'N' }">
-							<span class="material-icons float-right lock" data-toggle = "tooltip" title = "메모 잠금">lock_open</span>
-						</c:if>
-							<span class="material-icons float-right color" data-toggle = "tooltip" title = "메모 색 변경">color_lens</span>
-					</div>
-					<!-- 메모박스 내 메모 컨텐츠 -->
-					<div class='container memoContent'>
-						<c:if test="${Memolist.MEMO_LOC eq 'Y' }">
-						${Memolist.MEMO_KEYW }
-						</c:if> 
-						<c:if test="${Memolist.MEMO_LOC eq 'N' }">
-						<textarea class='memotext form-control'
-							style="overflow-y:hidden; 
-                		  		   resize:none; 
-                		  		   background-color: ${Memolist.MEMO_COLOR }; 
-                		  		   border: none">${Memolist.MEMO_TEX }</textarea>
-                		 </c:if>
-					</div>
-				</form>
-			</div>
-		</c:forEach>
+	
 	</div>
 	<!-- Search Modal -->
 	<div id="ModalForSearch" class="modal fade" role="dialog">
