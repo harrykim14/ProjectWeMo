@@ -100,6 +100,14 @@ public class MemoServiceImpl implements MemoService {
 		else
 			return false;
 	}
+	
+	@Override
+	public boolean saveListedMemoProperties(Memo memoObj) {
+		if (memodao.saveListedMemoProperties(memoObj) > 0)
+			return true;
+		else
+			return false;
+	}
 
 	@Override
 	public List<Memo> getFavMemoList(Memo memo) {
@@ -130,8 +138,5 @@ public class MemoServiceImpl implements MemoService {
 		return memodao.getMemoContent(memo);
 	}
 
-	
-
-	
 
 }

@@ -81,4 +81,17 @@ public class MemberServiceImpl implements MemberService {
 		return null;
 	}
 
+	@Override
+	public Member getMemberDetail(String id) {
+		return mdao.getMemberDetail(id);
+	}
+
+	@Override
+	public boolean saveUserSetting(Member member) {
+		if (mdao.saveUserSetting(member) > 0)
+			return true;
+		else 
+			return false;
+	}
+
 }

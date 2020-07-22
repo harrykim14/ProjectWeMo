@@ -31,5 +31,9 @@ public class MemberDAO {
 	public int updateLastSection(Member member) {
 		return sqlSession.update("Members.updateLastSection", member);
 	}
+
+	public int saveUserSetting(Member member) {
+		return sqlSession.update("Members.saveUserSetting", member);
+	}
 	
 }

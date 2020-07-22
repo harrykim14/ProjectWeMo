@@ -45,6 +45,10 @@ public class MemoDAO {
 	public int saveMemoProperties(Memo memoObj) {
 		return sqlSession.update("Memoes.saveMemoProperties", memoObj);
 	}
+	
+	public int saveListedMemoProperties(Memo memoObj) {
+		return sqlSession.update("Memoes.saveListedMemoProperties", memoObj);
+	}
 
 	public List<Memo> getFavMemoList(Memo memo) {
 		return sqlSession.selectList("Memoes.getFavMemoList", memo);
@@ -81,6 +85,8 @@ public class MemoDAO {
 	public Memo getMemoContent(Memo memo) {
 		return sqlSession.selectOne("Memoes.getMemoContent", memo);
 	}
+
+	
 
 	
 

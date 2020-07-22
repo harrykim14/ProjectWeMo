@@ -107,10 +107,24 @@
 			MEMO_ZID = #{MEMO_ZID},
 			MEMO_TEX = #{MEMO_TEX},
 			MEMO_FAV = #{MEMO_FAV},
+			MEMO_DATE = #{MEMO_DATE},
 			MEMO_LOC = #{MEMO_LOC}
 		WHERE MEMO_NUM = #{MEMO_NUM} 
 		AND MEMO_SUB = #{MEMO_SUB} 
 		AND USER_EMAIL = #{USER_EMAIL}
+	</update>
+	
+	<update id = "saveListedMemoProperties" parameterType = "memo">
+		UPDATE MEMO 
+		SET MEMO_COLOR = #{MEMO_COLOR},
+			MEMO_ZID = #{MEMO_ZID},
+			MEMO_TEX = #{MEMO_TEX},
+			MEMO_DATE = #{MEMO_DATE},
+			MEMO_FAV = #{MEMO_FAV},
+			MEMO_LOC = #{MEMO_LOC}
+		WHERE MEMO_NUM = #{MEMO_NUM} 
+		AND MEMO_SUB = #{MEMO_SUB} 
+		AND USER_EMAIL = #{USER_EMAIL}	
 	</update>
 	
 	<delete id = "deleteMemo" parameterType = "memo">

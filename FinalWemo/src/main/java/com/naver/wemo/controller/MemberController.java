@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.naver.wemo.DAO.MemberDAO;
 import com.naver.wemo.domain.Member;
 import com.naver.wemo.service.MemberService;
@@ -103,6 +104,47 @@ public class MemberController {
 		mService.insertMember(member);
 		return "WeMo_Login";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value ="getMyAccountDetail", method = RequestMethod.POST)
+	public void getMyAccountDetail(Member member, HttpServletResponse resp) {
+		String id = member.getUSER_EMAIL();
+		resp.setCharacterEncoding("UTF-8");
+		PrintWriter out = null;
+		try {
+			member = mService.getMemberDetail(id);
+			out = resp.getWriter();
+			String jsonMemberObj = new Gson().toJson(member);
+			out.print(jsonMemberObj);
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if(out != null)
+				out.close();
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value ="saveUserSetting", method = RequestMethod.POST)
+	public void saveUserSetting(Member memberObj, HttpServletResponse resp) {
+		resp.setCharacterEncoding("UTF-8");
+		PrintWriter out = null;
+		try {
+			if(mService.saveUserSetting(memberObj)) {
+				out = resp.getWriter();
+				out.print("true");
+			} else {
+				out = resp.getWriter();
+				out.print("false");
+			}
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
+	
 	
 	/*
 	@RequestMapping(value ="joinWeMoWithKakao")

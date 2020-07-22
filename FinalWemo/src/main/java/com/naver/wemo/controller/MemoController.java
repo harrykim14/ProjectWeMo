@@ -248,7 +248,26 @@ public class MemoController {
 			if (out != null)
 				out.close();
 		}
-	}	
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/saveListedMemoProperties", method = RequestMethod.POST)
+	public void saveListedMemoProperties(Memo memoObj, HttpServletResponse resp) throws IOException {
+		PrintWriter out = null;
+		try {
+		out = resp.getWriter();
+		if(mService.saveListedMemoProperties(memoObj))
+			out.print("true");
+		else
+			out.print("false");
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/setMemoColor", method = RequestMethod.POST)

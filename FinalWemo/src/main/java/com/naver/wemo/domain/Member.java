@@ -6,7 +6,9 @@ public class Member {
 	private String USER_SUB;	
 	private String AUTH_TYPE;	
 	private String USER_NICK;	
-	private String USER_FORM; 	
+	private String USER_FORM1;
+	private String USER_FORM2;
+	private String USER_FORM3;
 	
 	public String getUSER_EMAIL() {
 		return USER_EMAIL;
@@ -38,12 +40,25 @@ public class Member {
 	public void setUSER_NICK(String uSER_NICK) {
 		USER_NICK = uSER_NICK;
 	}
-	public String getUSER_FORM() {
-		return USER_FORM;
+	public String getUSER_FORM1() {
+		return USER_FORM1;
 	}
-	public void setUSER_FORM(String uSER_FORM) {
-		USER_FORM = uSER_FORM;
+	public void setUSER_FORM1(String uSER_FORM1) {
+		USER_FORM1 = uSER_FORM1;
 	}
+	public String getUSER_FORM2() {
+		return USER_FORM2;
+	}
+	public void setUSER_FORM2(String uSER_FORM2) {
+		USER_FORM2 = uSER_FORM2;
+	}
+	public String getUSER_FORM3() {
+		return USER_FORM3;
+	}
+	public void setUSER_FORM3(String uSER_FORM3) {
+		USER_FORM3 = uSER_FORM3;
+	}
+	
 
 	
 }

@@ -6,6 +6,8 @@
 $(function(){
 	
 	addAllEventsOnPage();
+	if($(window).width() < 900)
+		navbarResizingEvent();
 	
 /* navbarAddEvent function */
 	function navbarAddEvent(){
@@ -57,6 +59,10 @@ $(function(){
 /* navbarResizingEvent function */
 function navbarResizingEvent(){
 	
+		var sectionCheck = $('#MEMO_SUB').text();
+		if (sectionCheck == "ANALYSIS" || sectionCheck == "CALENDAR" || sectionCheck =="SETTING")
+			return false;
+		
 		var isChecked = ""
 			if ($('.toggle').eq(0).hasClass('btn-dark'))
 				isChecked = "checked";
@@ -80,7 +86,7 @@ function navbarResizingEvent(){
                           + '<td class="menu-analysis normal-menu">통계</td>'
                           + '<td class="menu-setting normal-menu">설정</td>'
                           + '<td class="menu-search normal-menu">'
-                          + '<input type="checkbox" class="memoAlineBtn" style = "width:120px;" '
+                          + '<input type="checkbox" class="memoAlignBtn" style = "width:120px;" '
                           + 'data-toggle="toggle" data-on="정리 끄기" data-off="메모 정리" data-onstyle="dark" data-offstyle="success"'+isChecked+'>'
                           + '<span><input type = "text" class = "search_input float-right"></span>'
                           + '<span class="material-icons float-right search-icon" style = "line-height: 24pt;">search</span>&nbsp;'
@@ -111,8 +117,13 @@ function navbarResizingEvent(){
             		$(firstRow[index]).on('click', addSectionChangeEvent);
             })
             $('.search-icon').on('click', addSearchMemoEvent);
-            $('.memoAlineBtn').bootstrapToggle()
-            				  .on('click', autoMemoAlign);
+            $('.memoAlignBtn').bootstrapToggle();
+            $('div[data-toggle="toggle"]:eq(0)').on("change",function(){
+            	if ($('.toggle:eq(0)').hasClass('btn-dark'))
+            		autoMemoAlign();
+            	else if ($('.toggle:eq(0)').hasClass('btn-success'))
+            		cancelMemoAlign();
+            })
         
         } else if (pageWidth <= 900) {
         	
@@ -122,22 +133,14 @@ function navbarResizingEvent(){
             			  + '<input type="text" class="search_input float-right"></nav>'
             			  + '<table class="table table-borderless mobile-nav">'            			  
                           + '<tbody id ="mobile-tbody">'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-study mobile-menu">공부</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-health mobile-menu">운동</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-money mobile-menu">가계부</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-calendar mobile-menu">캘린더</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-important mobile-menu">보관함</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-trash mobile-menu">휴지통</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-analysis mobile-menu">통계</td></tr>'
-                          + '<tr class="mobile-row">'
-                          + '<td class="menu-setting mobile-menu">설정</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-study mobile-menu">공부</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-health mobile-menu">운동</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-money mobile-menu">가계부</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-calendar mobile-menu">캘린더</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-important mobile-menu">보관함</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-trash mobile-menu">휴지통</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-analysis mobile-menu">통계</td></tr>'
+                          + '<tr class="mobile-row"><td class="menu-setting mobile-menu">설정</td></tr>'
                           + '</tbody></table>';
             
             var memoObj = {
@@ -158,7 +161,8 @@ function navbarResizingEvent(){
                        
             $('nav').html(mobileNav);
             $('.search-icon').on('click', addSearchMemoEvent);
-            $('.mobile-menu').on('click', addSectionChangeEvent);            
+            $('.mobile-menu').on('click', addSectionChangeEvent);
+            $('.listedMemoAddBtn').on('click', newListedMemoAppend);            
         }
     }
 
@@ -186,6 +190,9 @@ function addSectionChangeEvent(){
     	return false;
      } else if (section_text == "설정"){
     	 $('#MEMO_SUB').text('SETTING');
+    	 console.log("sectionSetting");
+    	 sectionSetting();
+    	 return false;
      } 
 		
     var memoObj = {
@@ -200,10 +207,10 @@ function addSectionChangeEvent(){
     	data : memoObj,
     	success : function(rdata) {
     		var windowWidth = $(window).width();
-    		if(windowWidth > 900)	
-    			putMemosAtMemoContainer(rdata);
-    		else(windowWidth <= 900)
-    			listingMemosAtMemoContainer(rdata);
+	    		if(windowWidth > 900)	
+	    			putMemosAtMemoContainer(rdata);
+	    		else if (windowWidth <= 900)
+	    			listingMemosAtMemoContainer(rdata);
     	},// success end
     	error : function(){
     		console.log("ajax 에러");
@@ -226,6 +233,17 @@ function putMemosAtMemoContainer(rdata){
 				restoreIcon = "<span class='material-icons float-right restore' "
 							+ "data-toggle='tooltip' title ='메모 복구'>restore</span>";
 			}
+			
+			var MEMO_TEX = Memolist.MEMO_TEX;
+    		if (typeof MEMO_TEX == undefined){
+    			MEMO_TEX = "";
+    		} else { 
+    			console.log(MEMO_TEX);
+    			if (MEMO_TEX.includes("\n"))
+    				var textareaRows = MEMO_TEX.split("\n").length + 1;
+    			else
+    				var textareaRows = 2;
+    		}
 		
     		if(Memolist.MEMO_FAV == 'N'){
     			var favStyle = 'color:rgb(33, 37, 41)';
@@ -246,18 +264,17 @@ function putMemosAtMemoContainer(rdata){
     		if(Memolist.MEMO_LOC == "N"){
     			var locText = 'lock_open';
     			var locTitle = '메모 잠금';
+    			var locContext = "<textarea class = 'memotext form-control' "
+    							   + "style = 'overflow-y:hidden; resize:none; "
+    							   + "background-color:" + Memolist.MEMO_COLOR
+    							   + "; border: none' rows ="+textareaRows+">"
+    							   + MEMO_TEX +"</textarea>"
     		} else {
     			var locText = 'lock';
     			var locTitle = '잠금 해제';
+    			var locContext = Memolist.MEMO_KEYW;
     		}
-    		
-    		if (typeof Memolist.MEMO_TEX == undefined){
-    			MEMO_TEX = "";
-    		} else { 
-    			MEMO_TEX = Memolist.MEMO_TEX;
-    			var textareaRows = MEMO_TEX.split("\n").length + 1;
-    		}
-    		
+    		    		
 		var memoboxCreate 
 			= "<div class='container memobox memobox-normal shadow-sm' "
 	        + "style = 'position:"+Memolist.MEMO_POSITION+"; top:"+Memolist.MEMO_TOP+"; "  
@@ -276,9 +293,7 @@ function putMemosAtMemoContainer(rdata){
 	        + "data-toggle='tooltip' title ='"+locTitle+"'>"+locText+"</span>"
 	        + "<span class='material-icons float-right color' "
 	        + "data-toggle ='tooltip' title='메모 색 변경'>color_lens</span></div>"
-	        + "<div class='container memoContent'><textarea class = 'memotext form-control' "
-	        + "style = 'overflow-y:hidden; resize:none; background-color:" + Memolist.MEMO_COLOR
-	        + "; border: none' rows ="+textareaRows+">"+MEMO_TEX+"</textarea></div></form></div>";
+	        + "<div class='container memoContent'>"+locContext+"</div></form></div>";
 	    
 	    $('.memoContainer').append(memoboxCreate);
 	       	    
@@ -294,9 +309,10 @@ function putMemosAtMemoContainer(rdata){
 		$('.memobox').draggable()
 					 .resizable()
 	    			 .one('click', addTextArea)
-	    			 .mouseup(function(){
+	    			 .mouseup(function(e){
+	    				 var target = e.target;
 				    	 adjustMemoboxzindex();
-				    	 saveMemoProperties();
+				    	 saveMemoProperties(target);
 				     })           
 	    			 .mousedown(bringFront)
 }
@@ -305,6 +321,17 @@ function putMemosAtMemoContainer(rdata){
 function listingMemosAtMemoContainer(rdata){
 	$('.memoContainer').empty();
 	$('.memoContainer').html("<ul class = 'list-group listContainer'></ul>");
+	
+	var isNormalSection = sectionTranslateENtoKR($('#MEMO_SUB').text());
+	if (isNormalSection == "공부" || isNormalSection == "운동" || isNormalSection == "가계부"){
+		var row4newListedMemo = "<div class='list-group'><li class='memobox memobox-list list-group-item list-group-item-action listedMemoAddBtn'>"
+			  				  + "<span>새 메모 쓰기</span>"
+			  				  + "<span class='material-icons float-right' data-toggle ='tooltip' title='새 메모 추가'>add_box</span></li>";
+	
+		$('.listContainer').append(row4newListedMemo);	
+		$('.listedMemoAddBtn').css('vertical-align', 'middle')
+							  .on('click', newListedMemoAppend);
+	}
 	$.each(rdata, function(index){
 	var Memolist = rdata[index];
 	var thisSection = $('#MEMO_SUB').text();
@@ -314,12 +341,19 @@ function listingMemosAtMemoContainer(rdata){
 			restoreIcon = "<span class='material-icons float-right restore' "
 						+ "data-toggle='tooltip' title ='메모 복구'>restore</span>";
 		}
+		
+		if (typeof Memolist.MEMO_TEX == undefined){
+			MEMO_TEX = "";
+		} else { 
+			MEMO_TEX = Memolist.MEMO_TEX;
+			var textareaRows = MEMO_TEX.split("\n").length + 1;
+		}
 	
 		if(Memolist.MEMO_FAV == 'N'){
-			var favStyle = 'color:rgb(33, 37, 41)';
+			var favStyle = 'rgb(73, 80, 87)';
 			var favTitle = '메모 보관';
 		} else if (Memolist.MEMO_FAV == 'Y') {
-			var favStyle = 'color:rgb(250, 128, 114)';
+			var favStyle = 'rgb(250, 128, 114)';
 			var favTitle = '보관 해제';
 			section_text = sectionTranslateENtoKR(Memolist.MEMO_SUB);
 		}
@@ -334,20 +368,18 @@ function listingMemosAtMemoContainer(rdata){
 		if(Memolist.MEMO_LOC == "N"){
 			var locText = 'lock_open';
 			var locTitle = '메모 잠금';
+			var locContext = "<textarea class='memotext' style='margin:1em; overflow-y:hidden; "
+						   + "resize:none; background-color:"+Memolist.MEMO_COLOR+"; "
+						   + "border:none; width:90%;' rows="+textareaRows+">"
+						   + Memolist.MEMO_TEX+"</textarea>"
 		} else {
 			var locText = 'lock';
 			var locTitle = '잠금 해제';
-		}
-		
-		if (typeof Memolist.MEMO_TEX == undefined){
-			MEMO_TEX = "";
-		} else { 
-			MEMO_TEX = Memolist.MEMO_TEX;
-			var textareaRows = MEMO_TEX.split("\n").length + 1;
-		}
-		
+			var locContext = "메모 잠금 키워드 :"+Memolist.MEMO_KEYW;
+		}	
+	
 	var memolistCreate
-			= "<li class='memobox memobox-list list-group-item list-group-item-action' style='background-color:"+Memolist.MEMO_COLOR+"'>"
+			= "<div class='list-group list-group-div'><li class='memobox memobox-list list-group-item list-group-item-action' style='background-color:"+Memolist.MEMO_COLOR+"'>"
             + "<input type='hidden' class='MEMO_NUM' name='MEMO_NUM' value="+Memolist.MEMO_NUM+">"
             + "<span class='MEMO_DATE'>"+Memolist.MEMO_DATE+"&nbsp;&nbsp;</span>"
             + "<span class='section-name'>["+section_text+"]</span>" 
@@ -355,13 +387,11 @@ function listingMemosAtMemoContainer(rdata){
             + "title ='"+traTitle+"'>delete</span>"
             + restoreIcon
             + "<span class='material-icons favorites float-right' data-toggle='tooltip' "
-            + "title ='"+favTitle+"' style='background-color:"+favStyle+"'>stars</span>"
+            + "title ='"+favTitle+"' style='color:"+favStyle+"'>stars</span>"
             + "<span class='material-icons float-right lock' data-toggle='tooltip' title='"+locTitle+"'>"+locText+"</span>"
             + "<span class='material-icons float-right color' data-toggle ='tooltip' title='메모 색 변경'>color_lens</span></li>"
             + "<li class='memoContent memoContent-list' style='display:none; background-color:"+Memolist.MEMO_COLOR+"';>"
-            + "<textarea class='memotext' style='margin:1em; overflow-y:hidden; resize:none; background-color:"+Memolist.MEMO_COLOR+"; "
-            + "border:none; width:90%;' rows="+textareaRows+">"
-            + Memolist.MEMO_TEX+"</textarea></li>"
+            + locContext + "<button type='button' class='btn listedMemoSaveBtn float-right'>저장</button></li></div>"
     
     $('.listContainer').append(memolistCreate);
        	    
@@ -372,15 +402,18 @@ function listingMemosAtMemoContainer(rdata){
 	$('.restore').on('click', deleteEventAdd);
 	$('.color').on('click', memoColorChange);
     $('.colorpad').on('click', colorPicking);
-    $('.memobox').tooltip()
-    			 .on('click', function(){
-    				 $(this).next('li').slideToggle('fast')
+    $("[data-toggle='tooltip']").tooltip();
+    $('.memobox').on('click', function(){
+    				 $(this).closest('.list-group').find('.memoContent').slideToggle('fast');
     			 	})
     			 .css("cursor", "pointer");
     $('.memotext').on('keyup', autoResizeTextAreaAtList);
-    $('.listContainer').sortable({
-    	connectWith : ".memoContent"
-    })
+    $('.listedMemoSaveBtn').on('click', function(e){
+						 	   var target = e.target;
+						 	   adjustMemoboxzindex();
+						 	   saveMemoProperties(target);
+    						});
+    $('.listContainer').sortable();
 }
 
 /* drawChart (Google Chart) */
@@ -439,6 +472,97 @@ function drawChart() {
 	})
 }
 
+function sectionSetting(){
+	
+	var memberObj = {
+    		"USER_EMAIL" : $('#USER_EMAIL').text()
+    	};
+	
+	$.ajax({
+		url : "getMyAccountDetail",
+		data : memberObj,
+		dataType : "JSON",
+		method : "POST",
+		success : function(rdata){
+			
+			console.log(rdata);
+			
+			var settingPageBuilder
+			= "<div class='container setting-pad'><form class='setting-form'><div class='form-group'>"
+		    + "<label class='setting-label' for='USER_EMAIL'>이메일 주소</label>"
+		    + "<input type='email' class='form-control form-control-lg setting-input' name='USER_EMAIL' value='"+rdata.USER_EMAIL+"' readonly>"
+		    + "<small class='form-text text-muted'>가입하실 때 입력하신 이메일 주소는 변경하실 수 없습니다.</small></div>"
+		    + "<div class='form-row'><div class='col'><label class='setting-label' for='USER_PASS'>비밀번호</label>"
+		    + "<input type='password' class='form-control form-control-lg setting-input' name='USER_PASS' value='"+rdata.USER_PASS+"'>"
+		    + "<small class='form-text text-muted'>비밀번호는 영문/숫자로 8자 이상 입력해주세요.</small></div>"
+		    + "<div class='col'><label class='setting-label' for='USER_PASS_CONFIRM'>비밀번호 확인</label>"
+		    + "<input type='password' class='form-control form-control-lg setting-input' name='USER_PASS_CHECK'>"
+		    + "<small class='form-text text-muted'>비밀번호를 변경하고자 하실 때만 입력해주세요.</small></div></div><br>"
+		    + "<div class='form-group'><label class='setting-label' for='autocomplete1'>사용자 지정 자동완성폼1</label>"
+		    + "<textarea class='form-control form-control-lg setting-input' rows='4' style='overflow-y:hidden; resize:none;'>"+rdata.USER_FORM1+"</textarea>"
+		    + "<small class='form-text text-muted'>자주 사용하는 문구 등을 자동완성 폼으로 설정하세요.</small></div>"
+		    + "<div class='form-group'><label class='setting-label' for='autocomplete2'>사용자 지정 자동완성폼2</label>"
+		    + "<textarea class='form-control form-control-lg setting-input' rows='4' style='overflow-y:hidden; resize:none;'>"+rdata.USER_FORM2+"</textarea>"
+		    + "<small class='form-text text-muted'>자동완성 폼은 메모장 안에서 Ctrl+Q로 불러올 수 있습니다.</small></div>"
+		    + "<div class='form-group'><label class='setting-label' for='autocomplete3'>사용자 지정 자동완성폼3</label>"
+		    + "<textarea class='form-control form-control-lg setting-input' rows='4' style='overflow-y:hidden; resize:none;'>"+rdata.USER_FORM3+"</textarea>"
+		    + "<small class='form-text text-muted'>자동완성 폼은 최대 세 개까지 등록하실 수 있습니다.</small></div>"
+		    + "<div class='form-group'><button type='button' class='btn settingConfirmBtn float-right'>설정 저장하기</button></div></form></div>"
+		    
+		    $('.memoContainer').html(settingPageBuilder);
+		    $('.settingConfirmBtn').on('click', saveUserSettingEvent);
+			
+		}
+	})
+	
+	
+	
+}
+
+function newListedMemoAppend(){
+	console.log("newListedMemoAppend() 실행")
+	var section_translation = sectionTranslateENtoKR($('#MEMO_SUB').text());
+    
+    var memoObj = {
+    		"USER_EMAIL" : $('#USER_EMAIL').text(),
+        	"MEMO_SUB" : $('#MEMO_SUB').text()        				
+        	};
+    
+    $.ajax({
+    	url : "newMemo",
+    	method : "POST",
+    	dataType : "JSON",
+    	data : memoObj,
+    	success :
+    		function(rdata){
+    		var Memo = rdata;
+    		
+    		var listedNewMemo
+			= "<div class='list-group list-group-div'><li class='memobox memobox-list list-group-item list-group-item-action' style='background-color:"+Memo.MEMO_COLOR+"'>"
+            + "<input type='hidden' class='MEMO_NUM' name='MEMO_NUM' value="+Memo.MEMO_NUM+">"
+            + "<span class='MEMO_DATE'>"+Memo.MEMO_DATE+"&nbsp;&nbsp;</span>"
+            + "<span class='section-name'>["+section_translation+"]</span>" 
+            + "<span class='material-icons delete float-right' data-toggle='tooltip' "
+            + "title ='휴지통으로'>delete</span>"
+            + "<span class='material-icons favorites float-right' data-toggle='tooltip' "
+            + "title ='메모 보관'>stars</span>"
+            + "<span class='material-icons float-right lock' data-toggle='tooltip' title='메모 잠금'>lock_open</span>"
+            + "<span class='material-icons float-right color' data-toggle ='tooltip' title='메모 색 변경'>color_lens</span></li>"
+            + "<li class='memoContent memoContent-list' style='display:none; background-color:"+Memo.MEMO_COLOR+";'>"
+            +"<textarea class='memotext' style='margin:1em; overflow-y:hidden; resize:none; background-color:"+Memo.MEMO_COLOR+"; "
+			+ "border:none; width:90%;' rows='2'>새 메모</textarea>"
+            + "<button type='button' class='btn listedMemoSaveBtn float-right'>저장</button></li></div>";
+    	
+    		$('.listContainer').append(listedNewMemo);
+    		$('.list-group-div').last().css('display', 'none');
+    	}
+    })
+    
+    var triggerPageView = ".menu-" + $('#MEMO_SUB').text().toLowerCase();
+	console.log(triggerPageView);
+	$(triggerPageView).trigger('click');
+}
+
 /* newMemoAppend function */
 function newMemoAppend(){
    
@@ -459,7 +583,7 @@ function newMemoAppend(){
         		var style = '"left:'+rdata.MEMO_LEFT+'; top:'+rdata.MEMO_TOP+'; z-index:'+rdata.MEMO_ZID+'; '
         				  + 'width:'+rdata.MEMO_WIDTH+'; height:'+rdata.MEMO_HEIGHT+';"';
         	
-                var newMemobox = "<div class = 'container memobox shadow-sm' style = "+style+"><form>"
+                var newMemobox = "<div class = 'container memobox memobox-normal shadow-sm' style = "+style+"><form>"
                         	   + "<div class = 'container memo-top'>"
                         	   + "<input type = 'hidden' class= 'MEMO_NUM' name = 'MEMO_NUM' value = "+ rdata.MEMO_NUM +">"
                                + "<span class = 'MEMO_DATE'>" + rdata.MEMO_DATE + "</span>"
@@ -487,8 +611,9 @@ function newMemoAppend(){
                                .on('click', '.delete', deleteEventAdd)
                                .on('click', '.color', memoColorChange)                              
                                .mouseup(function(e){
+                            	   var target = e.target;
 							    	 adjustMemoboxzindex();
-							    	 saveMemoProperties();
+							    	 saveMemoProperties(target);
 							     })
                                .mousedown(bringFront) // mousedown end
                                adjustMemoboxzindex();            			
@@ -498,18 +623,14 @@ function newMemoAppend(){
 
 /* memoboxSelectFunction function */
 function memoboxSelectFunction(targetObj){
-	/* 클릭했을 때 무조건 memobox를 선택할 수 있도록 하는 함수 */
-	/* 클릭한 타겟(Event객체의 e.target)을 선택하고  이 선택한 객체에 부여한 class값이 memo_top이라면 부모객체를, 아니면 그냥 this를 사용 */
 
 	var clickTargetSelector = targetObj;
 	
 	if (clickTargetSelector.hasClass('memobox')){
 		var memoboxSelector = clickTargetSelector;
-		console.log(memoboxSelector.attr('class'))
 		return memoboxSelector;
 	} else {
 		var memoboxSelector = clickTargetSelector.closest('.memobox');
-		console.log(memoboxSelector.attr('class'))
 		return memoboxSelector;
 	}
 }
@@ -571,7 +692,8 @@ function autoResizeTextAreaAtList(){
     }
     var defaultTextAreaHeight = 52;
     var appendTextAreaHeight = 26*(NumberOfEnters-1);
-    $(this).closest('.memoContent').css('height', defaultTextAreaHeight+appendTextAreaHeight)
+    var plusSaveButtonAreaHeight = 100;
+    $(this).closest('.memoContent').css('height', defaultTextAreaHeight+appendTextAreaHeight+plusSaveButtonAreaHeight)
     }
 
 /* rgb2hex function */
@@ -583,64 +705,99 @@ function rgb2hex(rgb) {
     return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 }
 
-function targetPrint(e){
-	console.log(e.which);
-}
-
-
 $('body').keypress(function(e){
 	console.log(e.which);
-	// ctrl + q = 17;
 });
 
-$('body').mouseup(function(e){
-	console.log(e.which);
-	console.log(e.target);
-})
-
 /* saveMemoProperties function */
-function saveMemoProperties(e){
-	
-	if($(this).hasClass('favorites')|| $(this).hasClass('delete'))
+function saveMemoProperties(target){
+	memoSelector = $(target).closest('.memobox-normal');
+	listedMemoSelector = $(target).closest('.list-group');
+	var windowWidth = $(window).width();
+	if($(this).hasClass('favorites')|| $(this).hasClass('delete')||$(this).hasClass('color'))
 		return false;
 	
-	var bgColor = mbxSelector.css('background-color');
-	var favColor = mbxSelector.find('.favorites').css('color');
-	var locText = mbxSelector.find('.lock').text();
-	var MEMO_DATE = mbxSelector.find('.MEMO_DATE').text();
-	
-	if (favColor == "#fa8072")
-		var fav = 'Y';
-	else 
-		var fav = 'N';
-	
-	if (locText == "lock")
-		var loc =  'Y';
-	else
-		var loc = 'N';
+	if (windowWidth > 900){
+		
+		console.log("memobox컬러:"+memoSelector.css('background-color'));
+		var favColor = memoSelector.find('.favorites').css('color');
+		var locText = memoSelector.find('.lock').text();
+		var MEMO_TEXT = memoSelector.find('textarea').val();	
+		if (favColor == "rgb(250, 128, 114)") 
+			var fav = 'Y';
+		else 
+			var fav = 'N';
+		
+		if (locText == "lock")
+			var loc = 'Y';
+		else
+			var loc = 'N';
+		
+		if (typeof MEMO_TEXT == undefined)
+			return false;
+		
+		var memoObj = {
+				"USER_EMAIL" : $('#USER_EMAIL').text(),
+				"MEMO_SUB" : $('#MEMO_SUB').text(),
+				"MEMO_POSITION" : "ABSOLUTE",
+				"MEMO_ZID" : 1000,
+				"MEMO_NUM" : memoSelector.find(".MEMO_NUM").val(),
+				"MEMO_TOP" : memoSelector.css('top'),
+				"MEMO_LEFT" : memoSelector.css('left'),
+				"MEMO_COLOR" : memoSelector.css('background-color'),
+				"MEMO_WIDTH" : memoSelector.css('width'),
+				"MEMO_HEIGHT" : memoSelector.css('height'),
+				"MEMO_TEX" : MEMO_TEXT,
+				"MEMO_DATE" : memoSelector.find('.MEMO_DATE').text(),
+				"MEMO_FAV" : fav,
+				"MEMO_LOC" : loc        			
+				}
+		
+		var url = "saveMemoProperties";
+		
+	} else if (windowWidth <= 900) {
+		
+		var favColor = listedMemoSelector.find('.favorites').css('color');
+		var locText = listedMemoSelector.find('.lock').text();
+		var MEMO_DATE = listedMemoSelector.find('.MEMO_DATE').text().substring(0,10);
+		var MEMO_TEXT = listedMemoSelector.find('textarea').val();
+		
+		if (typeof MEMO_TEXT == undefined)
+			return false;
+		
+		if (favColor == "rgb(250, 128, 114)") 
+			var fav = 'Y';
+		else 
+			var fav = 'N';
+		
+		if (locText == "lock")
+			var loc = 'Y';
+		else
+			var loc = 'N';
+		
+		var memoObj = {
+				"USER_EMAIL" : $('#USER_EMAIL').text(),
+				"MEMO_SUB" : $('#MEMO_SUB').text(),
+				"MEMO_NUM" : listedMemoSelector.find(".MEMO_NUM").val(),
+				"MEMO_COLOR" : listedMemoSelector.find(".memobox-list").css('background-color'),
+				"MEMO_ZID" : 1000,
+				"MEMO_TEX" : MEMO_TEXT,
+				"MEMO_DATE" : MEMO_DATE,
+				"MEMO_FAV" : fav,
+				"MEMO_LOC" : loc        			
+				}
+		
+		var url = "saveListedMemoProperties";
+		
+	}
 
 	/* 객체에 저장된 모든 style 정보를 불러오고 이 값들을 memoObj라는 변수로 객체화 */
-	var memoObj = {
-			"USER_EMAIL" : $('#USER_EMAIL').text(),
-			"MEMO_NUM" : mbxSelector.find(".MEMO_NUM").val(),
-			"MEMO_SUB" : $('#MEMO_SUB').text(),
-			"MEMO_POSITION" : "ABSOLUTE",
-			"MEMO_TOP" : mbxSelector.css('top'),
-			"MEMO_LEFT" : mbxSelector.css('left'),
-			"MEMO_COLOR" : bgColor,
-			"MEMO_WIDTH" : mbxSelector.css('width'),
-			"MEMO_HEIGHT" : mbxSelector.css('height'),
-			"MEMO_ZID" : 1000,
-			"MEMO_TEX" : mbxSelector.find('textarea').val(),
-			"MEMO_DATE" : MEMO_DATE,
-			"MEMO_FAV" : fav,
-			"MEMO_LOC" : loc        			
-			}
 	
 	console.log(memoObj);
-
+	console.log(url+"으로 보냄");
+	
 	$.ajax({
-		url : "saveMemoProperties",
+		url : url,
 		method : "POST",
 		data : memoObj,
 		success : function(result){
@@ -730,19 +887,42 @@ function setMemoLockAndUnlock(){
      	data : memoObj,
      	success : function(result){
      		console.log(result);
-     		if(btnText == "잠금"){
-     			$('.MEMO_NUM[value='+parseInt(MEMO_NUM)+']').closest('.memobox').find('.lock').text('lock')
-	     		    	   		 							.closest('.memobox').find('.lock').attr('title', '잠금 해제')
-	     		    	   		 							.closest('.memobox').find('.memoContent').text(keyword);
-     		} else {
-     			var textarea = "<textarea class = 'memotext form-control' "
-     						 + "style='overflow-y:hidden; resize:none; border: none; background-color:"+memoColor+";'>";
-     			$('.MEMO_NUM[value='+parseInt(MEMO_NUM)+']').closest('.memobox').find('.lock').text('lock_open')
-     													    .closest('.memobox').find('.lock').attr('title', '메모 잠금')
-     													    .closest('.memobox').find('.memoContent').html(textarea)
-     													    .closest('.memobox').find('.memotext').val(result);
-
-     		}
+     		MEMO_TEXT = result;
+	     	if ($(window).width() > 900){	
+	     		if(btnText == "잠금"){
+	     			$('.MEMO_NUM[value='+parseInt(MEMO_NUM)+']').closest('.memobox').find('.lock').text('lock')
+		     		    	   		 							.closest('.memobox').find('.lock').attr('title', '잠금 해제')
+		     		    	   		 							.closest('.memobox').find('.memoContent').text(keyword);
+	     		
+	     		} else {
+	     			var textarea = "<textarea class = 'memotext form-control' "
+	     						 + "style='overflow-y:hidden; resize:none; border: none; background-color:"+memoColor+";'>";
+	     			$('.MEMO_NUM[value='+parseInt(MEMO_NUM)+']').closest('.memobox').find('.lock').text('lock_open')
+	     													    .closest('.memobox').find('.lock').attr('title', '메모 잠금')
+	     													    .closest('.memobox').find('.memoContent').html(textarea)
+	     													    .closest('.memobox').find('.memotext').val(MEMO_TEXT);
+	     		
+	     		}
+	     	} else if ($(window).width() <= 900) {
+	     		if(btnText == "잠금"){
+	     			$('.MEMO_NUM[value='+parseInt(MEMO_NUM)+']').closest('.list-group').find('.lock').text('lock')
+		     		    	   		 							.closest('.list-group').find('.lock').attr('title', '잠금 해제')
+		     		    	   		 							.closest('.list-group').find('.memoContent-list').html("메모 잠금 키워드 : " + keyword);
+	     		
+	     		} else {
+	     			if (MEMO_TEX.includes("\n"))
+	    				var textareaRows = MEMO_TEX.split("\n").length + 1;
+	    			else
+	    				var textareaRows = 2;
+	     			var textarea = "<textarea rows='"+textareaRows+"' class = 'memotext form-control' "
+	     						 + "style = 'margin:1em; overflow-y:hidden; resize:none; background-color:"+memoColor+"; border:none; width:90%;'>"
+	     						 + MEMO_TEXT + "</textarea><button type='button' class='btn listedMemoSaveBtn float-right'>저장</button>";
+	     			$('.MEMO_NUM[value='+parseInt(MEMO_NUM)+']').closest('.list-group').find('.lock').text('lock_open')
+	     													    .closest('.list-group').find('.lock').attr('title', '메모 잠금')
+	     													    .closest('.list-group').find('.memoContent-list').html(textarea);
+	     		
+	     		}
+	     	}
      	}        	
      })
 }
@@ -750,18 +930,26 @@ function setMemoLockAndUnlock(){
 /* favoEventAdd function */
 function favoEventAdd() {
 	var sectionName = $("#MEMO_SUB").text();
-	var favIconSelect = $(this).closest('.memobox').find('favorites');
+	var favIconSelect = $(this);
 		favIconSelect.css('cursor', 'pointer');
-    if (favIconSelect.css('color') == "rgb(33, 37, 41)") {
+		
+    if (favIconSelect.css('color') == "rgb(73, 80, 87)" 
+    	|| favIconSelect.css('color') == "rgb(33, 37, 41)") {
     	favIconSelect.css('color', 'rgb(250, 128, 114)')
-        	   .attr('title', '보관 해제');
+        	   		 .attr('title', '보관 해제');
         var fav = 'Y';
     } else if (favIconSelect.css('color') == "rgb(250, 128, 114)") {
-    		   favIconSelect.css('color', 'rgb(33, 37, 41)')
+    	var windowWidth = $(window).width();
+    		if (windowWidth > 900){
+    		   favIconSelect.css('color', "rgb(33, 37, 41)")
     		   				.attr('title', '메모 보관');
+    		} else if (windowWidth <= 900){
+    			favIconSelect.css('color', "rgb(73, 80, 87)")
+    		   				.attr('title', '메모 보관');
+    		}
         var fav = 'N';
         if(sectionName == "IMPORTANT")
-		   mbxSelector.remove();
+		   $(this).closest('.memobox').remove();
     }
     
     var memoObj = {
@@ -812,17 +1000,64 @@ function deleteEventAdd(e) {
         success : function(rdata){
         	var windowWidth = $(window).width();
         	if (windowWidth > 900){
-        		$(this).closest('.memobox').remove();
+        		var thisMemoSelector = ".MEMO_NUM[value='"+MEMO_NUM+"']";
+        		$(thisMemoSelector).closest('.memobox').remove();
         		return false;
         	} else if (windowWidth <= 900){
-        		var memotopObjSelect = $(this).closest('.memobox');
+        		var thisMemoSelector = ".MEMO_NUM[value='"+MEMO_NUM+"']";
+        		var memotopObjSelect = $(thisMemoSelector).closest('.memobox');
         		var memocontObjSelect = $(memotopObjSelect.next());
         		var mergeMemo = $.merge(memotopObjSelect, memocontObjSelect);
         			mergeMemo.remove();
+        			
         		return false;
         	}
         }// success end 
     })// ajax end
+}
+
+function saveUserSettingEvent(e){
+    var popupBuilder = "<div class = 'container popup'>설정이 저장되었습니다!</div>"
+    $('body').append(popupBuilder);
+    $('.popup').css({
+        "border-radius" : "10pt",
+        padding : "15px 0px",
+        "text-align" : "center",
+        width : "200px",
+        height : "60px",
+        position:"absolute",
+        top : e.pageY-30,
+        left : e.pageX-280
+    })
+    var memberObj = {
+    	"USER_EMAIL" : $('#USER_EMAIL').text(),
+    	"USER_PASS" : $('input[name="USER_PASS"]').val(),
+    	"USER_FORM1" : $('textarea:eq(0)').val(),
+    	"USER_FORM2" : $('textarea:eq(1)').val(),
+    	"USER_FORM3" : $('textarea:eq(2)').val()
+    }
+    console.log(memberObj)
+    $.ajax({
+    	url : "saveUserSetting",
+    	method : "POST",
+    	data : memberObj,
+    	dataType : "JSON",
+    	success : function(result){
+    		if (result == "true"){
+    		 setInterval(function(){
+    		        $('.popup').animate({opacity : "hide"})
+    		    }, 2000)
+    		}
+    	},
+    	error : function(){
+    		setInterval(function(){
+    			$('.popup').text("오류로 인해 설정을 저장하지 못했습니다.")
+    			setInterval(function(){
+    		        $('.popup').animate({opacity : "hide"})
+    		    }, 2000)
+    		})	
+    	}
+    })
 }
 
 function addSearchMemoEvent(){
@@ -930,8 +1165,15 @@ function colorPicking(){
     var hexcode = rgb2hex(rgbcode);
     var MEMO_NUM = parseInt($('.COLOR_MEMO_NUM').text());
     var findMemobox = $('.MEMO_NUM[value ="'+MEMO_NUM+'"]').closest('.memobox');
+    	if($(window).width() > 900){
     	findMemobox.css('background-color', hexcode)
     			   .find('.memotext').css('background-color', hexcode);
+    	} else if ($(window).width() <= 900){
+    		var listedMemobox = $.merge($(findMemobox), $(findMemobox).next());
+    		var plusTextarea = $.merge($(listedMemobox), $(findMemobox.next().find('textarea')));
+    			plusTextarea.css('background-color', hexcode);
+    	}
+    		
     var memoObj = {"USER_EMAIL" : $("#USER_EMAIL").text(),
     			   "MEMO_NUM" : MEMO_NUM,
     			   "MEMO_COLOR" : $(this).css('background-color')};
@@ -950,12 +1192,6 @@ function colorPicking(){
     	})
    
 }
-$('.memoAlineBtn').on("change",function(){
-	if ($('.toggle').eq(0).hasClass('btn-dark'))
-		autoMemoAlign();
-	else if ($('.toggle').eq(0).hasClass('btn-success'))
-		cancelMemoAlign();
-})
 
 /* Auto Memo Align */
 function autoMemoAlign(){
@@ -1000,34 +1236,20 @@ function cancelMemoAlign(){
 /* Section Translate */
 	function sectionTranslateENtoKR(String) {
 		switch (String) {
-			case "STUDY":
-				section_text = "공부";
-				break;
-			case "HEALTH":
-				section_text = "운동";
-				break;
-			case "MONEY":
-				section_text = "가계부";
-				break;
-			default:
-				section_text = "";
+			case "STUDY": section_text = "공부"; 	break;
+			case "HEALTH": section_text = "운동"; break;
+			case "MONEY": section_text = "가계부"; break;
+			default: section_text = ""; break;
 		}
 		return section_text;
 	}
 	
 	function sectionTranslateKRtoEN(String) {
 		switch (String) {
-			case "공부":
-				section_text = "STUDY";
-				break;
-			case "운동":
-				section_text = "HEALTH";
-				break;
-			case "가계부":
-				section_text = "MONEY";
-				break;
-			default:
-				section_text = "";
+			case "공부": 	section_text = "STUDY"; break;
+			case "운동": section_text = "HEALTH"; break;
+			case "가계부": section_text = "MONEY"; break;
+			default: section_text = ""; break;
 		}
 		return section_text;
 	}
@@ -1057,13 +1279,20 @@ function addAllEventsOnPage(e){
 			             minHeight: 140
 			     })
 			     .one('click', addTextArea)
-			     .mouseup(function(){
+			     .mouseup(function(e){
+			    	 var target = e.target;
 			    	 adjustMemoboxzindex();
-			    	 saveMemoProperties();
+			    	 saveMemoProperties(target);
 			     })
 			     .mousedown(bringFront)
 	$('.memotext').keydown(autoResizeTextArea);
     $('.search-icon').on('click', addSearchMemoEvent);
+    $('div[data-toggle="toggle"]:eq(0)').on("change",function(){
+    	if ($('.toggle:eq(0)').hasClass('btn-dark'))
+    		autoMemoAlign();
+    	else if ($('.toggle:eq(0)').hasClass('btn-success'))
+    		cancelMemoAlign();
+    })
 }
 
 })

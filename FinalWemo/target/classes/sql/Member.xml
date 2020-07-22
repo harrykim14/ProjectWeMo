@@ -26,4 +26,13 @@
 	<update id = "updateLastSection" parameterType = "member">
 		UPDATE MEMBER SET USER_SUB = #{USER_SUB} WHERE USER_EMAIL = #{USER_EMAIL}
 	</update>
+	
+	<update id = "saveUserSetting" parameterType = "member">
+		UPDATE MEMBER 
+		SET USER_PASS = #{USER_PASS}, 
+		USER_FORM1 = #{USER_FORM1},
+		USER_FORM2 = #{USER_FORM2},
+		USER_FORM3 = #{USER_FORM3} 
+		WHERE USER_EMAIL = #{USER_EMAIL}
+	</update>
 </mapper>

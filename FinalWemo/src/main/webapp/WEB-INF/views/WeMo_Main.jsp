@@ -33,7 +33,7 @@
 <!-- Google Font (Noto Sans KR) -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, user-scalable=no">
 
 <link href="resources/css/WeMo_Main_CSS.css" rel="stylesheet">
 <script src="resources/js/WeMo_Main_Functions.js"></script>

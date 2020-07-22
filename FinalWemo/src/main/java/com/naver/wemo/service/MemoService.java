@@ -32,6 +32,7 @@ public interface MemoService {
 	public List<Memo> searchMemoList(Memo memo);
 	// 메모 검색
 	public boolean saveMemoProperties(Memo memoObj);
+	public boolean saveListedMemoProperties(Memo memoObj);
 	
 	
 	

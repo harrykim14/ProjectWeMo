@@ -24,6 +24,8 @@ public interface MemberService {
 	public Map<String, String> getUserAutoForm(String USER_EMAIL);
 	// 유저 설정 자동완성 폼 가져오는 기능
 	public boolean updateLastSection(Member member);
+	public Member getMemberDetail(String id);
+	public boolean saveUserSetting(Member member);
 	
 
 }

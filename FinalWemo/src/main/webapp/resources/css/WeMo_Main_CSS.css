@@ -91,6 +91,19 @@
 	width : 90%;
 }
 
+li {
+	list-style: none;
+	}
+
+textarea {
+	border:none;
+	outline:none;
+}
+
+.listedMemoSaveBtn {
+	margin : .5em .5em .5em .5em;
+}
+
 .memobox-normal {
 	margin-top: 20px;
 	border: 1px solid #CCC;
@@ -120,4 +133,26 @@
 .search-modal-body tr:hover {
 	background-color:gray;
 	cursor:pointer
+}
+
+.setting-input {
+    border : 2px solid darkslategray;
+}
+
+.setting-label {
+    font-size : 16pt;
+    font-weight : 700;
+}
+
+.setting-pad {
+    width : 90%;
+    border : 5px solid black;
+    border-radius : 00px 0px 20px 20px;
+    padding : 10px 10px 60px 10px;
+    margin-bottom: 20px;  
+}
+
+.settingConfirmBtn {
+	background-color : #FFC0CB;
+    margin-right : 20px;
 }
