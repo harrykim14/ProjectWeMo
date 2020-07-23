@@ -8,6 +8,7 @@
 
 .normal-menu {
 	border-radius: 5% 5% 0% 0%;
+	margin-top : 2px;
 	width: 8%;
 	line-height: 40px;
 	height: 40px;
@@ -146,7 +147,6 @@ textarea {
 
 .setting-pad {
     width : 90%;
-    border : 5px solid black;
     border-radius : 00px 0px 20px 20px;
     padding : 10px 10px 60px 10px;
     margin-bottom: 20px;  

@@ -30,6 +30,10 @@
 <link rel="stylesheet"
 	href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+<!-- clipboard.js  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+
+
 <!-- Google Font (Noto Sans KR) -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
@@ -42,6 +46,7 @@ $(function(){
 	var triggerPageView = ".menu-" + $('#MEMO_SUB').text().toLowerCase();
 	console.log(triggerPageView);
 	$(triggerPageView).trigger('click');
+	
 })
 </script>
 </head>
@@ -75,6 +80,9 @@ $(function(){
 	<div class="memoContainer">
 	
 	</div>
+	<!-- Auto User Form Storage-->
+	<span id = "AutoUserForm" style = "display:none;"></span>
+	
 	<!-- Search Modal -->
 	<div id="ModalForSearch" class="modal fade" role="dialog">
 		<div class="modal-dialog">

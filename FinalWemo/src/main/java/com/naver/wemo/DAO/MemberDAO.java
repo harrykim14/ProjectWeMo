@@ -35,5 +35,16 @@ public class MemberDAO {
 	public int saveUserSetting(Member member) {
 		return sqlSession.update("Members.saveUserSetting", member);
 	}
+
+	public Member getUserAutoForm(Member member) {
+		return sqlSession.selectOne("Members.getUserAutoForm", member);
+	}
 	
+	public int kakaoJoin(String kemail) {
+		return sqlSession.insert("Members.kakaoInsert",kemail);
+	}
+	
+	public int naverJoin(String nemail) {
+		return sqlSession.insert("Members.naverInsert",nemail);
+	}
 }

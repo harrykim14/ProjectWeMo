@@ -33,7 +33,7 @@ public class MemoController {
 	
 	@RequestMapping(value = "/Memolist", method = RequestMethod.GET)
 	public ModelAndView getWeMoList(@RequestParam(value = "MEMO_SUB", defaultValue = "STUDY", required = false) String MEMO_SUB, 
-									ModelAndView mv, Memo memo, HttpSession session){
+									ModelAndView mv, HttpSession session){
 		String id = (String) session.getAttribute("USER_EMAIL");
 		
 		mv.addObject("USER_EMAIL", id);

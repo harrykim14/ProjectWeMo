@@ -7,9 +7,20 @@
 <mapper namespace="Members">
 
 	<insert id = "insert" parameterType = "member">
-		INSERT INTO MEMBER VALUES(#{USER_EMAIL}, #{USER_PASS}, 'WEMO', #{USER_EMAIL}, 'No Form Now', 'STUDY')
+		INSERT INTO MEMBER VALUES(#{USER_EMAIL}, #{USER_PASS}, 'WEMO', #{USER_EMAIL})
 	</insert>
-						     	 <!-- USER_EMAIL, USER_PASS, USER_SUB, AUTH_TYPE, USER_NICK, USER_FORM -->
+	
+	<insert id = "kakaoInsert" parameterType = "String">
+		INSERT INTO MEMBER 
+			  (USER_EMAIL, AUTH_TYPE, USER_SUB, USER_NICK) 
+		VALUES(#{USER_EMAIL},'KAKAO', 'STUDY', #{USER_EMAIL})
+	</insert>
+	
+	<insert id = "naverInsert" parameterType = "String">
+		INSERT INTO MEMBER 
+			  (USER_EMAIL, AUTH_TYPE, USER_SUB, USER_NICK) 
+		VALUES(#{USER_EMAIL},'NAVER', 'STUDY', #{USER_EMAIL})
+	</insert>					     	 
 	
 	<select id = "getMemberDetail" parameterType = "String" resultType = "member">
 		SELECT * FROM MEMBER WHERE USER_EMAIL = #{USER_EMAIL}
@@ -21,6 +32,10 @@
 	
 	<select id = "idcheck" parameterType = "String" resultType = "String">
 		select USER_EMAIL from member where USER_EMAIL = #{USER_EMAIL}
+	</select>
+	
+	<select id = "getUserAutoForm" parameterType = "member" resultType = "member">
+				SELECT USER_FORM1, USER_FORM2, USER_FORM3 FROM MEMBER WHERE USER_EMAIL = #{USER_EMAIL}
 	</select>
 	
 	<update id = "updateLastSection" parameterType = "member">

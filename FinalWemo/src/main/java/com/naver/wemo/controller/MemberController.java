@@ -125,6 +125,24 @@ public class MemberController {
 	}
 	
 	@ResponseBody
+	@RequestMapping(value ="copyAutoCompleteForm", method = RequestMethod.POST)
+	public void copyAutoCompleteForm(Member member, HttpServletResponse resp) {
+		resp.setCharacterEncoding("UTF-8");
+		PrintWriter out = null;
+		try {
+			Member userDetail = mService.getUserAutoForm(member);	
+			out = resp.getWriter();
+			String jsonUserForm = new Gson().toJson(userDetail);
+			out.println(jsonUserForm);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
+	
+	@ResponseBody
 	@RequestMapping(value ="saveUserSetting", method = RequestMethod.POST)
 	public void saveUserSetting(Member memberObj, HttpServletResponse resp) {
 		resp.setCharacterEncoding("UTF-8");
@@ -145,9 +163,77 @@ public class MemberController {
 		}
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "joinWeMoWithKakao", method = RequestMethod.GET)
+	public void joinWeMoWithKakao(@RequestParam(value = "email") String kemail, 
+								  HttpServletResponse res, HttpSession session) throws IOException {
+
+		PrintWriter out = null;
+		res.setCharacterEncoding("UTF-8");
+		try {
+			out = res.getWriter();
+
+			if (mService.idcheck(kemail)) {
+				Member member = mService.getMemberDetail(kemail);
+				if (member.getAUTH_TYPE().equals("KAKAO")) {
+					session.setAttribute("USER_EMAIL", kemail);
+					out.println("<script> location.href = 'Memolist'</script>");// 아이디가 있을경우 메인으로 이동
+				} else {
+					out.println("<script> location.href = 'WeMo_Login'</script>");
+				}
+			} else {
+				if (mService.kakaoJoin(kemail)) {
+					session.setAttribute("USER_EMAIL", kemail);
+					out.println("<script> location.href = 'Memolist' </script>");// 카카오 회원가입 완료
+				} else {
+					out.println("<script> location.href = 'WeMo_Login' </script>");// 카카오 회원가입 실패
+				}
+			}
+		} catch (Exception e) {
+			e.getStackTrace();
+		} finally {
+			if (out != null)
+				out.close();
+		}
+	}
 	
-	/*
-	@RequestMapping(value ="joinWeMoWithKakao")
-	public String createNewAccountWithKakao(@RequestParam(value = "e-mail") String Email)
-	*/
+	@ResponseBody
+	@RequestMapping (value="/naverLogin",method= RequestMethod.GET)
+	public void naverLogin( @RequestParam(value = "email" ,required=false) String nemail, 
+		HttpServletResponse res,
+		HttpSession session) throws IOException{
+		
+		PrintWriter out = null;
+		res.setCharacterEncoding("UTF-8");
+		try {
+			out = res.getWriter();
+			
+			if (mService.idcheck(nemail)) {
+				Member member = mService.getMemberDetail(nemail);
+				if(member.getAUTH_TYPE().equals("NAVER")) {
+				session.setAttribute("USER_EMAIL", nemail);
+				out.println("<script> location.href = 'Memolist'</script>");// 아이디가 있을경우 메인으로 이동
+				} else {
+				out.println("<script> location.href = 'WeMo_Login'</script>");
+				}
+			} else {
+				if (mService.naverJoin(nemail)) {
+					session.setAttribute("USER_EMAIL", nemail);
+					out.println("<script> location.href = 'Memolist' </script>");// 카카오 회원가입 완료
+				} else {
+					out.println("<script> location.href = 'WeMo_Login' </script>");// 카카오 회원가입 실패
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(out != null)
+				out.close();
+		}
+	}	
+	
+	@RequestMapping (value="/callback", method =RequestMethod.GET)
+	public String naverCallback() {
+		return "callback";
+	}
 }

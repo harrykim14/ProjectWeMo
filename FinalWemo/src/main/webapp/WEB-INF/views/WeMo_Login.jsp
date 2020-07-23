@@ -22,6 +22,11 @@
 
     <!-- Google Font (Noto Sans KR) -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    
+    <!-- Other SNS ID Login JS -->
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.0.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 
     <script>
        $(function(){
@@ -222,6 +227,9 @@
             display : block;
             margin : 0 auto;
         }
+        #kakao-login-btn{
+        	cursor : pointer
+        }
     </style>
 </head>
 <body>
@@ -244,7 +252,14 @@
             <input type = "password" id ="USER_PASS" name = "USER_PASS" class ="loginInput"><br><br>
             <span><input type = "checkbox" id = "autoLogin" name ="autoLogin">
             <label for = "autoLogin">&nbsp;자동 로그인</label></span>&nbsp;&nbsp;
-            <img src = "resources/image/kakaobtn.png" width =30px>
+            <div id="kakaoIdLogin" style="display:inline-block" data-toggle ='tooltip' title = '카카오 아이디로 로그인'>
+            <img src = "resources/image/kakaobtn.png" id = "kakao-login-btn" width ="30px" role="button">
+            </div>
+            <div id="naverIdLogin" style="display:inline-block" data-toggle ='tooltip' title = '네이버 아이디로 로그인'>
+          	<a id="naver-login-btn" href="#" role="button">
+            <img src="resources/image/naver.ico" width="30px"> 
+          	</a>
+         	</div>
             <br>            
                 <button type ="submit" class = "btn btn-login">메모장 열기</button>
                 <button type ="button" class = "btn btn-join">회원가입</button>
@@ -252,5 +267,6 @@
             </form>
             </div>
         </div>
+        <script src = "resources/js/JS4SNSLogin.js"></script>
 </body>
 </html>

@@ -1,8 +1,5 @@
 package com.naver.wemo.service;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,36 +49,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean updateMember(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteMember(String USER_EMAIL) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public List<Member> getMemberList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean updateUserSetting(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Map<String, String> getUserAutoForm(String USER_EMAIL) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Member getMemberDetail(String id) {
 		return mdao.getMemberDetail(id);
 	}
@@ -92,6 +59,28 @@ public class MemberServiceImpl implements MemberService {
 			return true;
 		else 
 			return false;
+	}
+
+	@Override
+	public Member getUserAutoForm(Member member) {
+		return mdao.getUserAutoForm(member);
+	}
+	
+	@Override
+	public boolean kakaoJoin(String kemail) {
+		if (mdao.kakaoJoin(kemail) > 0)
+		 	return true;
+		 else 
+			 return false;
+		
+	}
+	@Override
+	public boolean naverJoin(String nemail) {
+		if (mdao.naverJoin(nemail) > 0)
+		 	return true;
+		 else 
+			 return false;
+		
 	}
 
 }

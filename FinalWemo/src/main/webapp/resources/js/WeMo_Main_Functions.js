@@ -55,10 +55,12 @@ $(function(){
 	            	}// if end
         	})        
     }
-	
+
 /* navbarResizingEvent function */
-function navbarResizingEvent(){
-	
+function navbarResizingEvent(e){
+		var clickTarget = e.target;
+		if ($(clickTarget).hasClass('ui-resizable-handle')||$(clickTarget).hasClass('ui-draggable-handle'))
+			return false;
 		var sectionCheck = $('#MEMO_SUB').text();
 		if (sectionCheck == "ANALYSIS" || sectionCheck == "CALENDAR" || sectionCheck =="SETTING")
 			return false;
@@ -67,11 +69,7 @@ function navbarResizingEvent(){
 			if ($('.toggle').eq(0).hasClass('btn-dark'))
 				isChecked = "checked";
     	var pageWidth = $(window).width();
-        $('.memobox').resizable({
-            maxWidth: pageWidth,
-            minWidth: 185,
-            minHeight: 140
-        })
+        $('.memobox').resizable({ minWidth: 185, minHeight: 140 })
         
         if(pageWidth > 900){
             var normalNav = '<table class="table navTable">'
@@ -190,7 +188,7 @@ function addSectionChangeEvent(){
     	return false;
      } else if (section_text == "설정"){
     	 $('#MEMO_SUB').text('SETTING');
-    	 console.log("sectionSetting");
+    	 console.log("sectionSetting() 실행");
     	 sectionSetting();
     	 return false;
      } 
@@ -238,7 +236,6 @@ function putMemosAtMemoContainer(rdata){
     		if (typeof MEMO_TEX == undefined){
     			MEMO_TEX = "";
     		} else { 
-    			console.log(MEMO_TEX);
     			if (MEMO_TEX.includes("\n"))
     				var textareaRows = MEMO_TEX.split("\n").length + 1;
     			else
@@ -307,7 +304,7 @@ function putMemosAtMemoContainer(rdata){
 		$("[data-toggle='tooltip']").tooltip();
 		$('.memotext').keydown(autoResizeTextArea);
 		$('.memobox').draggable()
-					 .resizable()
+					 .resizable({minWidth: 185, minHeight: 140})
 	    			 .one('click', addTextArea)
 	    			 .mouseup(function(e){
 	    				 var target = e.target;
@@ -485,7 +482,14 @@ function sectionSetting(){
 		method : "POST",
 		success : function(rdata){
 			
-			console.log(rdata);
+			var USER_PASS = rdata.USER_PASS;
+			var passSmallText = "비밀번호는 영문/숫자로 8자 이상 입력해주세요.";
+			var isSNSID = ""
+			if(rdata.AUTH_TYPE == 'NAVER' || rdata.AUTH_TYPE == 'KAKAO'){
+				passSmallText = "SNS로 로그인하시면 비밀번호를 설정하지 않으셔도 됩니다.";
+				USER_PASS = "";
+				isSNSID = "readonly";
+			}
 			
 			var settingPageBuilder
 			= "<div class='container setting-pad'><form class='setting-form'><div class='form-group'>"
@@ -493,17 +497,17 @@ function sectionSetting(){
 		    + "<input type='email' class='form-control form-control-lg setting-input' name='USER_EMAIL' value='"+rdata.USER_EMAIL+"' readonly>"
 		    + "<small class='form-text text-muted'>가입하실 때 입력하신 이메일 주소는 변경하실 수 없습니다.</small></div>"
 		    + "<div class='form-row'><div class='col'><label class='setting-label' for='USER_PASS'>비밀번호</label>"
-		    + "<input type='password' class='form-control form-control-lg setting-input' name='USER_PASS' value='"+rdata.USER_PASS+"'>"
-		    + "<small class='form-text text-muted'>비밀번호는 영문/숫자로 8자 이상 입력해주세요.</small></div>"
+		    + "<input type='password' class='form-control form-control-lg setting-input' name='USER_PASS' value='"+USER_PASS+"'"+isSNSID+">"
+		    + "<small class='form-text text-muted'>"+passSmallText+"</small></div>"
 		    + "<div class='col'><label class='setting-label' for='USER_PASS_CONFIRM'>비밀번호 확인</label>"
-		    + "<input type='password' class='form-control form-control-lg setting-input' name='USER_PASS_CHECK'>"
+		    + "<input type='password' class='form-control form-control-lg setting-input' name='USER_PASS_CHECK'"+isSNSID+">"
 		    + "<small class='form-text text-muted'>비밀번호를 변경하고자 하실 때만 입력해주세요.</small></div></div><br>"
 		    + "<div class='form-group'><label class='setting-label' for='autocomplete1'>사용자 지정 자동완성폼1</label>"
 		    + "<textarea class='form-control form-control-lg setting-input' rows='4' style='overflow-y:hidden; resize:none;'>"+rdata.USER_FORM1+"</textarea>"
 		    + "<small class='form-text text-muted'>자주 사용하는 문구 등을 자동완성 폼으로 설정하세요.</small></div>"
 		    + "<div class='form-group'><label class='setting-label' for='autocomplete2'>사용자 지정 자동완성폼2</label>"
 		    + "<textarea class='form-control form-control-lg setting-input' rows='4' style='overflow-y:hidden; resize:none;'>"+rdata.USER_FORM2+"</textarea>"
-		    + "<small class='form-text text-muted'>자동완성 폼은 메모장 안에서 Ctrl+Q로 불러올 수 있습니다.</small></div>"
+		    + "<small class='form-text text-muted'>자동완성 폼은 메모장 안에서 Ctrl+SpaceBar(1번), Ctrl+Q(2번), Ctrl+B(3번)로 불러올 수 있습니다.</small></div>"
 		    + "<div class='form-group'><label class='setting-label' for='autocomplete3'>사용자 지정 자동완성폼3</label>"
 		    + "<textarea class='form-control form-control-lg setting-input' rows='4' style='overflow-y:hidden; resize:none;'>"+rdata.USER_FORM3+"</textarea>"
 		    + "<small class='form-text text-muted'>자동완성 폼은 최대 세 개까지 등록하실 수 있습니다.</small></div>"
@@ -601,7 +605,7 @@ function newMemoAppend(){
 
                  var findNewMemoBox = $('.memoContainer').last().find('.memobox');
                  findNewMemoBox.draggable()
-                               .resizable()
+                               .resizable({minWidth: 185, minHeight: 140})
                              // 한 번만 실행되는 textarea 생성 이벤트를 .memobox 클래스에 추가
                                .one('click', findNewMemoBox, addTextArea)
 
@@ -706,7 +710,31 @@ function rgb2hex(rgb) {
 }
 
 $('body').keypress(function(e){
-	console.log(e.which);
+	var INPUT_KEYVALUE = e.which;
+	if (e.which == 0 || e.which == 17 || e.which == 2){
+		var memberObj = {"USER_EMAIL" : $('#USER_EMAIL').text()}
+	$.ajax({
+		url : "copyAutoCompleteForm",
+		data : memberObj,
+		dataType : "JSON",
+		method : "POST",
+		success : function(UserAutoForm){	
+			var copyAutoForm ="";
+			switch(INPUT_KEYVALUE){
+				case 0 : copyAutoForm = UserAutoForm.USER_FORM1; break;
+				case 17 : copyAutoForm = UserAutoForm.USER_FORM2; break;
+				default : copyAutoForm = UserAutoForm.USER_FORM3; break; 
+			}
+			navigator.clipboard.writeText(copyAutoForm).then(() => {
+			    console.log('success');
+			})
+			popupCopyAutoFormSuccess();
+		}
+		
+	})
+		
+		
+	}
 });
 
 /* saveMemoProperties function */
@@ -719,7 +747,6 @@ function saveMemoProperties(target){
 	
 	if (windowWidth > 900){
 		
-		console.log("memobox컬러:"+memoSelector.css('background-color'));
 		var favColor = memoSelector.find('.favorites').css('color');
 		var locText = memoSelector.find('.lock').text();
 		var MEMO_TEXT = memoSelector.find('textarea').val();	
@@ -793,9 +820,6 @@ function saveMemoProperties(target){
 
 	/* 객체에 저장된 모든 style 정보를 불러오고 이 값들을 memoObj라는 변수로 객체화 */
 	
-	console.log(memoObj);
-	console.log(url+"으로 보냄");
-	
 	$.ajax({
 		url : url,
 		method : "POST",
@@ -844,7 +868,6 @@ function lockEventAdd() {
         $('.LOCK_MEMO_NUM').text(MEMO_NUM);
         $('.btn-lock').on('click', setMemoLockAndUnlock);
         $('#ModalForLock').modal();
-        
                
     } else {
         
@@ -878,7 +901,6 @@ function setMemoLockAndUnlock(){
 					"MEMO_LOC" : $('.MEMO_LOC').text(),
 					"MEMO_KEYW" : keyword
 					}
-	console.log(memoObj);
 
 	 $.ajax({
      	url : "setMemoLockAndUnlock",
@@ -958,9 +980,7 @@ function favoEventAdd() {
     		"MEMO_SUB" : "MEMO_FAV",
     		"MEMO_FAV" : fav
      	};
-    
-    console.log(memoObj);
-    
+ 
     $.ajax({
     	url : "setMemoFavorite",
     	data : memoObj,
@@ -1029,6 +1049,7 @@ function saveUserSettingEvent(e){
         top : e.pageY-30,
         left : e.pageX-280
     })
+    
     var memberObj = {
     	"USER_EMAIL" : $('#USER_EMAIL').text(),
     	"USER_PASS" : $('input[name="USER_PASS"]').val(),
@@ -1036,7 +1057,7 @@ function saveUserSettingEvent(e){
     	"USER_FORM2" : $('textarea:eq(1)').val(),
     	"USER_FORM3" : $('textarea:eq(2)').val()
     }
-    console.log(memberObj)
+ 
     $.ajax({
     	url : "saveUserSetting",
     	method : "POST",
@@ -1060,6 +1081,28 @@ function saveUserSettingEvent(e){
     })
 }
 
+function popupCopyAutoFormSuccess(){
+	if ('.popup')
+		$('.popup').remove();
+    var popupBuilder = "<div class = 'container popup'><br>사용자 지정 자동완성폼이<br>클립보드에 복사 되었습니다.</div>"
+    var halfSizeWindow = $(window).width()/3;
+    $('body').append(popupBuilder);
+    $('.popup').css({
+        "text-align" : "center",
+        "background-color" : "white",
+        border : "2px solid black",
+        "border-radius" : "0px 0px 10px 10px",
+        width : "250px",
+        height : "100px",
+        position:"absolute",
+        left : halfSizeWindow,
+        top : "-1px"
+    })
+    
+    $('.popup').slideDown("slow", function(){ $('.popup').delay(1000).slideUp("slow")})
+    		    
+}
+
 function addSearchMemoEvent(){
     var search_word = $('.search_input').val();
     console.log(search_word);
@@ -1067,7 +1110,6 @@ function addSearchMemoEvent(){
 	          "USER_EMAIL" : $('#USER_EMAIL').text(),                 
 	          "MEMO_TEX" : search_word
 	       };
-    console.log(memoObj);
     
     if(search_word.length > 0){
  
@@ -1104,9 +1146,7 @@ function addSearchMemoEvent(){
 		    	   
 		    	   search_result += "<tr class = 'search_result'><td><input type = 'hidden' class = 'SEARCH_MEMO_NUM' value = "+Memolist.MEMO_NUM+">"
 		    	   				 +  "<span data-dismiss ='modal'>메모 내용 : " + MEMO_TEX + "&nbsp;&nbsp;"
-		    	   				 +  "메모 위치 : " + MEMO_SUB+ "</span></td></tr>";
-		    	   console.log(search_result);
-		    	   
+		    	   				 +  "메모 위치 : " + MEMO_SUB+ "</span></td></tr>";		    	   
 		       })
 		       search_result += "</tbody>";
 	       	   dropdown.append(search_result);
@@ -1178,7 +1218,6 @@ function colorPicking(){
     			   "MEMO_NUM" : MEMO_NUM,
     			   "MEMO_COLOR" : $(this).css('background-color')};
     
-    console.log(memoObj);
     	$.ajax({
     		url : "setMemoColor",
     		method : "POST",
@@ -1273,11 +1312,7 @@ function addAllEventsOnPage(e){
     $("[data-toggle='tooltip']").tooltip();
     
     $('.memobox').draggable()
-			     .resizable({
-			             maxWidth: pageWidth,
-			             minWidth: 185,
-			             minHeight: 140
-			     })
+			     .resizable({ minWidth: 185, minHeight: 140 })
 			     .one('click', addTextArea)
 			     .mouseup(function(e){
 			    	 var target = e.target;
