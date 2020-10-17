@@ -21,6 +21,6 @@ SNS 로그인 구현은 다른 팀원이 진행하였으며 반응형을 고려�
 메모가 겹쳐 안보이게 될 경우를 고려하여 상단탭 우측에 "메모 정리" 버튼을 구현하였음. 메모들은 화면 너비에 비례하여 정리되며 버튼을 다시 누르면 원래 상태로 복귀됨.
 
 <b>4. 메모 보관기능</b><br>
-<image src="https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/04.%20%EB%B3%B4%EA%B4%80%ED%95%A8.JPG">
+<image src="https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/04.%20%EB%B3%B4%EA%B4%80%ED%95%A8.JPG" width ="300px">
   
 메모 우측상단에 위치한 별 모양의 마크를 눌러 분홍색으로 활성화하면 보관함 탭에서 카테고리에 상관 없이 중요한 메모들을 볼 수 있다.
