@@ -24,3 +24,8 @@ SNS 로그인 구현은 다른 팀원이 진행하였으며 반응형을 고려�
 <image src="https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/04.%20%EB%B3%B4%EA%B4%80%ED%95%A8.JPG" width ="300px">
   
 메모 우측상단에 위치한 별 모양의 마크를 눌러 분홍색으로 활성화하면 보관함 탭에서 카테고리에 상관 없이 중요한 메모들을 볼 수 있다.
+
+<b>5. 휴지통 내 메모 복구 기능</b><br>
+<image src= "https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/05.%20%ED%9C%B4%EC%A7%80%ED%86%B5%EC%97%90%EC%84%9C%20%EB%A9%94%EB%AA%A8%20%EB%B3%B5%EA%B5%AC%ED%95%98%EA%B8%B0.jpg">
+  
+메모 우측상단의 휴지통 마크를 클릭하면 메모는 휴지통에서만 볼 수 있으며 휴지통으로 이동된 메모의 우측 상단에는 메모 복구 아이콘이 추가됨. 추가된 메모 복구 아이콘을 클릭하면 원래 있었던 페이지로 이동되며 휴지통에서는 안보이게 된다.
