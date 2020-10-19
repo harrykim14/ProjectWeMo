@@ -29,3 +29,8 @@ SNS 로그인 구현은 다른 팀원이 진행하였으며 반응형을 고려�
 <image src= "https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/05.%20%ED%9C%B4%EC%A7%80%ED%86%B5%EC%97%90%EC%84%9C%20%EB%A9%94%EB%AA%A8%20%EB%B3%B5%EA%B5%AC%ED%95%98%EA%B8%B0.jpg">
   
 메모 우측상단의 휴지통 마크를 클릭하면 메모는 휴지통에서만 볼 수 있으며 휴지통으로 이동된 메모의 우측 상단에는 메모 복구 아이콘이 추가됨. 추가된 메모 복구 아이콘을 클릭하면 원래 있었던 페이지로 이동되며 휴지통에서는 안보이게 된다.
+
+<b>6. 통계 페이지</b>
+<img src ="https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/06.%20%ED%86%B5%EA%B3%84%ED%99%94%EB%A9%B4.JPG">
+
+통계 탭에서는 유저가 작성한 카테고리 별 메모 수를 집계하여 파이차트로 볼 수 있으며 이 파이차트는 구글 API를 사용하였음.
