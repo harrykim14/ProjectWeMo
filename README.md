@@ -34,3 +34,8 @@ SNS 로그인 구현은 다른 팀원이 진행하였으며 반응형을 고려�
 <img src ="https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/06.%20%ED%86%B5%EA%B3%84%ED%99%94%EB%A9%B4.JPG">
 
 통계 탭에서는 유저가 작성한 카테고리 별 메모 수를 집계하여 파이차트로 볼 수 있으며 이 파이차트는 구글 API를 사용하였음.
+
+<b>7. 자동완성 기능</b><br>
+<img src = "https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/07.%20%EC%84%A4%EC%A0%95%EC%97%90%EC%84%9C%20%EC%9E%90%EB%8F%99%EC%99%84%EC%84%B1%20%ED%8F%BC%20%EC%A0%80%EC%9E%A5%ED%95%98%EA%B8%B0.JPG">
+
+설정 탭에서는 유저가 자주 사용하는 문구를 최대 세 개까지 저장할 수 있으며 저장된 문구는 단축키를 눌렀을 때 클립보드로 저장되며 유저는 클립보드로 저장된 내용을 복사함으로써 원하는 내용을 쉽게 사용할 수 있다.
