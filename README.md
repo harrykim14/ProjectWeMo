@@ -38,4 +38,8 @@ SNS 로그인 구현은 다른 팀원이 진행하였으며 반응형을 고려�
 <b>7. 자동완성 기능</b><br>
 <img src = "https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/07.%20%EC%84%A4%EC%A0%95%EC%97%90%EC%84%9C%20%EC%9E%90%EB%8F%99%EC%99%84%EC%84%B1%20%ED%8F%BC%20%EC%A0%80%EC%9E%A5%ED%95%98%EA%B8%B0.JPG">
 
-설정 탭에서는 유저가 자주 사용하는 문구를 최대 세 개까지 저장할 수 있으며 저장된 문구는 단축키를 눌렀을 때 클립보드로 저장되며 유저는 클립보드로 저장된 내용을 복사함으로써 원하는 내용을 쉽게 사용할 수 있다.
+설정 탭에서는 유저가 자주 사용하는 문구를 최대 세 개까지 저장할 수 있으며 저장된 문구는 단축키를 눌렀을 때 클립보드로 저장되며 유저는 클립보드로 저장된 내용을 복사함으로써 원하는 내용을 쉽게 사용할 수 있다. <br>
+
+https://github.com/harrykim14/ProjectWeMo/blob/master/WeMo%20Screenshot/07-1.%20%EC%9E%90%EB%8F%99%EC%99%84%EC%84%B1%20%ED%8F%BC%20%ED%81%B4%EB%A6%BD%EB%B3%B4%EB%93%9C%EB%A1%9C%20%EB%B3%B5%EC%82%AC%ED%95%98%EA%B3%A0%20%EB%B6%99%EC%97%AC%EB%84%A3%EA%B8%B0.jpg"><br>
+(단축키를 누르면 화면 상단에 클립보드에 복사되었다는 메시지가 표시되었다가 사라진다)
+
